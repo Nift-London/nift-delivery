@@ -22,3 +22,14 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Common\Evermile\EvermileClient:
+        arguments:
+            - '%env(EVERMILE_HOST)%'
+            - '%env(EVERMILE_MERCHANT_ID)%'
+
+    App\Common\Evermile\EvermileAuthenticator:
+        arguments:
+            - '%env(EVERMILE_AUTH_HOST)%'
+            - '%env(EVERMILE_CLIENT_ID)%'
+            - '%env(EVERMILE_CLIENT_SECRET)%'
