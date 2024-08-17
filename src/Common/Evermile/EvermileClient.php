@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Common\Evermile;
 
 use GuzzleHttp\Client;
-use OpenAPI\Client\Api\PickupLocationsApi;
+use OpenAPI\Client\Api\QuotesApi;
 use OpenAPI\Client\Configuration;
+use OpenAPI\Client\Model\QuotePost200Response;
+use OpenAPI\Client\Model\QuotePostRequest;
 
 final class EvermileClient
 {
@@ -20,10 +22,11 @@ final class EvermileClient
         Configuration::getDefaultConfiguration()->setHost($host);
     }
 
-    public function getPickupLocationsClient()
+    public function getQuote(array $requestData): QuotePost200Response
     {
-        $apiInstance = new PickupLocationsApi(new Client(), Configuration::getDefaultConfiguration());
+        $apiInstance = new QuotesApi(new Client(), Configuration::getDefaultConfiguration());
 
-        dd($apiInstance->locationsGet($this->evermileMerchantId));
+        // todo can i limit it for 2 days?
+        return $apiInstance->quotePost(new QuotePostRequest($requestData), $this->evermileMerchantId);
     }
 }
