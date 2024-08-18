@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Quote\Infrastructure\Queries;
+namespace App\Quote\Infrastructure\Query;
 
-use App\Quote\Application\Calculator\Provider\EvermileQuoteProviderInterface;
 use App\Quote\Application\Calculator\QuoteCalculator;
 use App\Quote\Domain\DTO\AddressDTO;
 use App\Quote\Domain\DTO\ProposalQuotesDTO;

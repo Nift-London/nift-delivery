@@ -16,6 +16,7 @@ final class QuoteDTO
     private \DateTimeImmutable $pickupDateTo;
     private \DateTimeImmutable $deliveryDateFrom;
     private \DateTimeImmutable $deliveryDateTo;
+    // todo enum type
 
     public function __construct(string $id, string $name, string $code, string $description, int $price, string $currency, \DateTimeImmutable $pickupDateFrom, \DateTimeImmutable $pickupDateTo, \DateTimeImmutable $deliveryDateFrom, \DateTimeImmutable $deliveryDateTo)
     {

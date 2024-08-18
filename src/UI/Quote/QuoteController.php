@@ -6,7 +6,8 @@ namespace App\UI\Quote;
 
 use App\Quote\Domain\DTO\AddressDTO;
 use App\Quote\Domain\DTO\StoreDTO;
-use App\Quote\Infrastructure\Queries\QuoteQuery;
+use App\Quote\Infrastructure\Query\QuoteQuery;
+use App\Store\Infrastructure\Query\StoreQuery;
 use App\UI\Quote\Builder\Response\QuoteResponseDTOBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,11 +24,13 @@ final class QuoteController extends AbstractController
 {
     private QuoteQuery $quoteQuery;
     private QuoteResponseDTOBuilder $quoteResponseDTOBuilder;
+    private StoreQuery $storeQuery;
 
-    public function __construct(QuoteQuery $quoteQuery, QuoteResponseDTOBuilder $quoteResponseDTOBuilder)
+    public function __construct(QuoteQuery $quoteQuery, QuoteResponseDTOBuilder $quoteResponseDTOBuilder, StoreQuery $storeQuery)
     {
         $this->quoteQuery = $quoteQuery;
         $this->quoteResponseDTOBuilder = $quoteResponseDTOBuilder;
+        $this->storeQuery = $storeQuery;
     }
 
     #[Route('/api/v1/quote/shopify', name: 'quote', methods: ['POST'])]
@@ -36,7 +39,7 @@ final class QuoteController extends AbstractController
         //todo from request
         $addressFrom = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
         $addressTo = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
-        $storeDto = new StoreDTO('f9e4c4e4-e05e-4020-970c-d71f961fdda0');
+        $storeDto = new StoreDTO($this->storeQuery->findStoreByShopifyName('s')->getEvermileLocationId());
         $quote = $this->quoteQuery->query($addressFrom, $addressTo, $storeDto);
 
         return new Response($this->getSerializer()->serialize(
