@@ -4,25 +4,15 @@ declare(strict_types=1);
 
 namespace App\Quote\Application\Calculator;
 
-use App\Quote\Application\Calculator\Provider\QuoteProviderInterface;
-use App\Quote\Domain\DTO\AddressDTO;
 use App\Quote\Domain\DTO\ProposalQuotesDTO;
 use App\Quote\Domain\DTO\QuoteDTO;
 
-// this will be strategy in future
+// This will be strategy in future to calculate cheapest/fastest quotes
 final class QuoteCalculator
 {
-    private QuoteProviderInterface $quoteProvider;
-
-    public function __construct(QuoteProviderInterface $quoteProvider)
+    /** @param QuoteDTO[] $quotes */
+    public function calculate(array $quotes): ProposalQuotesDTO
     {
-        $this->quoteProvider = $quoteProvider;
-    }
-
-    public function calculate(AddressDTO $addressDTO): ProposalQuotesDTO
-    {
-        $quotes = $this->quoteProvider->provide($addressDTO);
-
         if (empty($quotes)) {
             return ProposalQuotesDTO::ofNoAvailableRates();
         }

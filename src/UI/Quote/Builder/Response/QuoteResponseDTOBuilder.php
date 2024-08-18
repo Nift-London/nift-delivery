@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Quote\Builder;
+namespace App\UI\Quote\Builder\Response;
 
 use App\Quote\Domain\DTO\ProposalQuotesDTO;
 use App\Quote\Domain\DTO\QuoteDTO;

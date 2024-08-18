@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\UI\Quote;
 
-use App\Quote\Application\Calculator\QuoteCalculator;
 use App\Quote\Domain\DTO\AddressDTO;
-use App\UI\Quote\Builder\QuoteResponseDTOBuilder;
+use App\Quote\Domain\DTO\StoreDTO;
+use App\Quote\Infrastructure\Queries\QuoteQuery;
+use App\UI\Quote\Builder\Response\QuoteResponseDTOBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -20,28 +21,35 @@ use Symfony\Component\Serializer\Serializer;
 #[AsController]
 final class QuoteController extends AbstractController
 {
-    private QuoteCalculator $quoteCalculator;
+    private QuoteQuery $quoteQuery;
     private QuoteResponseDTOBuilder $quoteResponseDTOBuilder;
 
-    public function __construct(QuoteCalculator $quoteCalculator, QuoteResponseDTOBuilder $quoteResponseDTOBuilder)
+    public function __construct(QuoteQuery $quoteQuery, QuoteResponseDTOBuilder $quoteResponseDTOBuilder)
     {
-        $this->quoteCalculator = $quoteCalculator;
+        $this->quoteQuery = $quoteQuery;
         $this->quoteResponseDTOBuilder = $quoteResponseDTOBuilder;
     }
 
-    #[Route('/api/v1/quote/shopify', name: 'quote')]
+    #[Route('/api/v1/quote/shopify', name: 'quote', methods: ['POST'])]
     public function quoteForShopify(Request $request): Response
     {
         //todo from request
-        $addressDto = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
+        $addressFrom = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
+        $addressTo = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
+        $storeDto = new StoreDTO('f9e4c4e4-e05e-4020-970c-d71f961fdda0');
+        $quote = $this->quoteQuery->query($addressFrom, $addressTo, $storeDto);
 
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter())];
-        $serializer = new Serializer($normalizers, $encoders);
-
-        return new Response($serializer->serialize(
-            ['rates' => $this->quoteResponseDTOBuilder->build($this->quoteCalculator->calculate($addressDto))],
+        return new Response($this->getSerializer()->serialize(
+            ['rates' => $this->quoteResponseDTOBuilder->build($quote)],
             'json'
         ));
+    }
+
+    // todo setup default for all
+    private function getSerializer(): Serializer
+    {
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter())];
+        return new Serializer($normalizers, $encoders);
     }
 }
