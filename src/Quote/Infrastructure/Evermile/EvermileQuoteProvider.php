@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Quote\Infrastructure\Evermile;
 
-use App\Common\Evermile\EvermileClient;
-use App\Quote\Domain\DTO\AddressDTO;
-use App\Quote\Domain\DTO\QuoteDTO;
-use App\Quote\Domain\DTO\StoreDTO;
+use App\Quote\Application\DTO\AddressDTO;
+use App\Quote\Application\DTO\QuoteDTO;
+use App\Quote\Application\DTO\StoreDTO;
 use App\Quote\Infrastructure\Evermile\Builder\EvermileQuoteRequestBuilder;
+use App\Quote\Infrastructure\Evermile\Client\EvermileClient;
 
 final class EvermileQuoteProvider
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Quote\Application\Calculator;
 
-use App\Quote\Domain\DTO\ProposalQuotesDTO;
-use App\Quote\Domain\DTO\QuoteDTO;
+use App\Quote\Application\DTO\ProposalQuotesDTO;
+use App\Quote\Application\DTO\QuoteDTO;
 
 // This will be strategy in future to calculate cheapest/fastest quotes
 final class QuoteCalculator

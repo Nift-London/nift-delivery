@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Quote\Infrastructure\Query;
 
 use App\Quote\Application\Calculator\QuoteCalculator;
-use App\Quote\Domain\DTO\ProposalQuotesDTO;
+use App\Quote\Application\DTO\ProposalQuotesDTO;
 use App\Quote\Infrastructure\Evermile\EvermileQuoteProvider;
 use App\Quote\Infrastructure\Query\DTO\QuoteQueryDTO;
 

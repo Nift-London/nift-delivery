@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Quote\Builder\Query;
 
-use App\Quote\Domain\DTO\AddressDTO;
-use App\Quote\Domain\DTO\StoreDTO;
+use App\Quote\Application\DTO\AddressDTO;
+use App\Quote\Application\DTO\StoreDTO;
 use App\Quote\Infrastructure\Query\DTO\QuoteQueryDTO;
 use App\Store\Application\Exception\StoreValidationException;
 use App\Store\Infrastructure\Query\StoreQuery;

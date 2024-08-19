@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Quote\Domain\DTO;
+namespace App\Quote\Application\DTO;
 
 final class StoreDTO
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Common\Evermile;
+namespace App\Quote\Infrastructure\Evermile\Client;
 
 use GuzzleHttp\Client;
 use OpenAPI\Client\Configuration;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Quote\Infrastructure\Query\DTO;
 
-use App\Quote\Domain\DTO\AddressDTO;
-use App\Quote\Domain\DTO\StoreDTO;
+use App\Quote\Application\DTO\AddressDTO;
+use App\Quote\Application\DTO\StoreDTO;
 
 final class QuoteQueryDTO
 {

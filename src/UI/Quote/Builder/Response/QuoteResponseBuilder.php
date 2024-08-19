@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Quote\Builder\Response;
 
-use App\Quote\Domain\DTO\ProposalQuotesDTO;
-use App\Quote\Domain\DTO\QuoteDTO;
+use App\Quote\Application\DTO\ProposalQuotesDTO;
+use App\Quote\Application\DTO\QuoteDTO;
 use App\UI\Quote\DTO\Response\ShopifyQuoteResponse;
 
 final class QuoteResponseBuilder
