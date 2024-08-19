@@ -6,6 +6,7 @@ namespace App\Store\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 final class Store
@@ -14,7 +15,7 @@ final class Store
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private int $id;
+    private Uuid $id;
     #[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
     private \DateTimeImmutable $createdAt;
     #[ORM\Column(type: 'text', nullable: false)]
@@ -25,16 +26,21 @@ final class Store
     private string $postalCode;
     #[ORM\Column(type: 'text', nullable: false)]
     private string $city;
-    #[ORM\Column(type: 'json', nullable: false)]
-    private StoreExternalData $externalData;
+    #[ORM\Column(type: 'text', nullable: false)]
+    private string $evermileLocationId;
+    #[ORM\Column(type: 'text', nullable: false)]
+    private string $shopifyToken;
+    #[ORM\Column(type: 'text', nullable: false)]
+    private string $shopifyName;
+    #[ORM\Column(type: 'text', nullable: false)]
+    private string $shopifyDomain;
 
     public function __construct()
     {
-        $this->externalData = new StoreExternalData();
         $this->createdAt = new \DateTimeImmutable();
     }
 
-    public function getId(): int
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -64,11 +70,6 @@ final class Store
         return $this->city;
     }
 
-    public function getExternalData(): StoreExternalData
-    {
-        return $this->externalData;
-    }
-
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -93,9 +94,47 @@ final class Store
         return $this;
     }
 
-    public function setExternalData(StoreExternalData $externalData): self
+    public function getEvermileLocationId(): string
     {
-        $this->externalData = $externalData;
+        return $this->evermileLocationId;
+    }
+
+    public function setEvermileLocationId(string $evermileLocationId): self
+    {
+        $this->evermileLocationId = $evermileLocationId;
+        return $this;
+    }
+
+    public function getShopifyToken(): string
+    {
+        return $this->shopifyToken;
+    }
+
+    public function setShopifyToken(string $shopifyToken): self
+    {
+        $this->shopifyToken = $shopifyToken;
+        return $this;
+    }
+
+    public function getShopifyName(): string
+    {
+        return $this->shopifyName;
+    }
+
+    public function setShopifyName(string $shopifyName): self
+    {
+        $this->shopifyName = $shopifyName;
+        return $this;
+    }
+
+    public function getShopifyDomain(): string
+    {
+        return $this->shopifyDomain;
+    }
+
+    public function setShopifyDomain(string $shopifyDomain): self
+    {
+        $this->shopifyDomain = $shopifyDomain;
         return $this;
     }
 }

@@ -21,12 +21,18 @@ final class EvermileQuoteProvider
         $this->evermileQuoteRequestBuilder = $evermileQuoteRequestBuilder;
     }
 
+    // todo in future handle $addressFrom as priority, for now $store->evermileLocationId is enough
     /** @return QuoteDTO[] */
-    public function provide(AddressDTO $addressFrom, AddressDTO $addressTo, StoreDTO $store): array
+    public function provide(?AddressDTO $addressFrom, AddressDTO $addressTo, StoreDTO $store): array
     {
         $quotes = [];
 
-        $response = $this->evermileClient->getQuote($this->evermileQuoteRequestBuilder->build($addressTo, $store));
+        try {
+            $response = $this->evermileClient->getQuote($this->evermileQuoteRequestBuilder->build($addressTo, $store));
+        } catch (\Exception $e) {
+            // todo log exception
+            return $quotes;
+        }
 
         foreach($response->getDateProposals() as $dateProposal) {
             foreach($dateProposal->getProposals() as $proposalOptional) {
@@ -46,7 +52,7 @@ final class EvermileQuoteProvider
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getStart()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getEnd()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getStart()),
-                    \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getStart()),
+                    \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getEnd()),
                 );
             }
 

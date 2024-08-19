@@ -53,7 +53,13 @@ final class QuoteCalculator
         $proposalQuote = null;
         $cheapestOption = PHP_INT_MAX;
 
+        $skipFirst = 0;
         foreach ($quotes as $quote) {
+            if ($skipFirst == 0) {
+                $skipFirst++;
+                continue;
+            }
+
             if ($quote->getDeliveryDateTo()->format('Ymd') == $today->format('Ymd') && $quote->getPrice() < $cheapestOption) {
                 $proposalQuote = $quote;
                 $cheapestOption = $quote->getPrice();

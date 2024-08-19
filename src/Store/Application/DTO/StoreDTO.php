@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Store\Application\DTO;
 
+use Symfony\Component\Uid\Uuid;
+
 final class StoreDTO
 {
-    private int $id; // todo uuid
+    private Uuid $id;
     private string $street;
     private string $postalCode;
     private string $city;
     private string $evermileLocationId;
 
-    public function __construct(int $id, string $street, string $postalCode, string $city, string $evermileLocationId)
+    public function __construct(Uuid $id, string $street, string $postalCode, string $city, string $evermileLocationId)
     {
         $this->id = $id;
         $this->street = $street;
@@ -21,7 +23,7 @@ final class StoreDTO
         $this->evermileLocationId = $evermileLocationId;
     }
 
-    public function getId(): int
+    public function getId(): Uuid
     {
         return $this->id;
     }

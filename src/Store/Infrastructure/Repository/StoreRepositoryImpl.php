@@ -21,4 +21,9 @@ final class StoreRepositoryImpl extends ServiceEntityRepository implements Store
         $this->getEntityManager()->persist($store);
         $this->getEntityManager()->flush();
     }
+
+    public function findByShopifyDomain(string $shopifyDomain): ?Store
+    {
+        return $this->findOneBy(['shopifyDomain' => $shopifyDomain]);
+    }
 }

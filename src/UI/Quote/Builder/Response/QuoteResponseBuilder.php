@@ -8,7 +8,7 @@ use App\Quote\Domain\DTO\ProposalQuotesDTO;
 use App\Quote\Domain\DTO\QuoteDTO;
 use App\UI\Quote\DTO\Response\ShopifyQuoteResponse;
 
-final class QuoteResponseDTOBuilder
+final class QuoteResponseBuilder
 {
     /**
      * @param QuoteDTO[] $quoteDTOs
@@ -23,7 +23,7 @@ final class QuoteResponseDTOBuilder
                 'Need it for tonight',
                 'tonight',
                 $proposalQuotesDTO->getFastestToday()->getPrice(),
-                'Fastest delivery option.',
+                'Fastest delivery option. Estimated today delivery time: ' . $proposalQuotesDTO->getFastestToday()->getDeliveryDateTo()->format('H:i'),
                 $proposalQuotesDTO->getFastestToday()->getCurrency()
             );
         }
@@ -33,7 +33,7 @@ final class QuoteResponseDTOBuilder
                 'Need it for today',
                 'today',
                 $proposalQuotesDTO->getToday()->getPrice(),
-                'Optimal delivery option',
+                'Optimal delivery option. Estimated today delivery time: ' . $proposalQuotesDTO->getToday()->getDeliveryDateTo()->format('H:i'),
                 $proposalQuotesDTO->getToday()->getCurrency()
             );
         }
@@ -43,7 +43,7 @@ final class QuoteResponseDTOBuilder
                 'Need it for tomorrow',
                 'tomorrow',
                 $proposalQuotesDTO->getLatest()->getPrice(),
-                'Normal delivery option',
+                'Normal delivery option. Estimated delivery time: ' . $proposalQuotesDTO->getLatest()->getDeliveryDateTo()->format('Y/m/d H:i'),
                 $proposalQuotesDTO->getLatest()->getCurrency()
             );
         }

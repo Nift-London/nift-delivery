@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\UI\Quote;
 
-use App\Quote\Domain\DTO\AddressDTO;
-use App\Quote\Domain\DTO\StoreDTO;
 use App\Quote\Infrastructure\Query\QuoteQuery;
-use App\Store\Infrastructure\Query\StoreQuery;
-use App\UI\Quote\Builder\Response\QuoteResponseDTOBuilder;
+use App\Store\Application\Exception\StoreValidationException;
+use App\UI\Quote\Builder\Request\QuoteForShopifyRequestBuilder;
+use App\UI\Quote\Builder\Query\QuoteQueryBuilder;
+use App\UI\Quote\Builder\Response\QuoteResponseBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -23,27 +23,38 @@ use Symfony\Component\Serializer\Serializer;
 final class QuoteController extends AbstractController
 {
     private QuoteQuery $quoteQuery;
-    private QuoteResponseDTOBuilder $quoteResponseDTOBuilder;
-    private StoreQuery $storeQuery;
+    private QuoteResponseBuilder $quoteResponseBuilder;
 
-    public function __construct(QuoteQuery $quoteQuery, QuoteResponseDTOBuilder $quoteResponseDTOBuilder, StoreQuery $storeQuery)
+    public function __construct(QuoteQuery $quoteQuery, QuoteResponseBuilder $quoteResponseBuilder)
     {
         $this->quoteQuery = $quoteQuery;
-        $this->quoteResponseDTOBuilder = $quoteResponseDTOBuilder;
-        $this->storeQuery = $storeQuery;
+        $this->quoteResponseBuilder = $quoteResponseBuilder;
     }
 
     #[Route('/api/v1/quote/shopify', name: 'quote', methods: ['POST'])]
-    public function quoteForShopify(Request $request): Response
-    {
-        //todo from request
-        $addressFrom = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
-        $addressTo = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
-        $storeDto = new StoreDTO($this->storeQuery->queryByShopifyName('s')->getEvermileLocationId());
-        $quote = $this->quoteQuery->query($addressFrom, $addressTo, $storeDto);
+    public function quoteForShopify(Request $request,
+        QuoteForShopifyRequestBuilder $quoteForShopifyRequestBuilder,
+        QuoteQueryBuilder $quoteQueryBuilder
+    ): Response {
+        // todo make pretty request validator
+        $shopifyDomain = $request->headers->get('X-Shopify-Shop-Domain');
+
+        if (!$shopifyDomain) {
+            return $this->json(['error' => 'Invalid shopify domain'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $quoteForShopifyRequest = $quoteForShopifyRequestBuilder->build($request);
+
+        try {
+            $quoteQuery = $quoteQueryBuilder->build($quoteForShopifyRequest);
+        } catch (StoreValidationException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+        $quote = $this->quoteQuery->query($quoteQuery);
 
         return new Response($this->getSerializer()->serialize(
-            ['rates' => $this->quoteResponseDTOBuilder->build($quote)],
+            ['rates' => $this->quoteResponseBuilder->build($quote)],
             'json'
         ));
     }

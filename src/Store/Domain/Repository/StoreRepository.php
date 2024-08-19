@@ -9,4 +9,5 @@ use App\Store\Domain\Entity\Store;
 interface StoreRepository
 {
     public function save(Store $store): void;
+    public function findByShopifyDomain(string $shopifyDomain): ?Store;
 }
