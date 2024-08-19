@@ -18,4 +18,16 @@ final class StoreExternalData
     {
         return $this->shopifyToken;
     }
+
+    public function setEvermileLocationId(string $evermileLocationId): self
+    {
+        $this->evermileLocationId = $evermileLocationId;
+        return $this;
+    }
+
+    public function setShopifyToken(string $shopifyToken): self
+    {
+        $this->shopifyToken = $shopifyToken;
+        return $this;
+    }
 }

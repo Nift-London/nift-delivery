@@ -16,7 +16,7 @@ final class StoreQuery
         $this->storeProvider = $storeProvider;
     }
 
-    public function findStoreByShopifyName(string $shopifyName): StoreDTO
+    public function queryByShopifyName(string $shopifyName): StoreDTO
     {
         $store = $this->storeProvider->provideStoreByShopifyName();
         return new StoreDTO(1, 'Street', 'asd', 'London', $store->getExternalData()->getEvermileLocationId());

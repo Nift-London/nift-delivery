@@ -39,7 +39,7 @@ final class QuoteController extends AbstractController
         //todo from request
         $addressFrom = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
         $addressTo = new AddressDTO("145 Queen Victoria St", "EC4V 4AA", "London");
-        $storeDto = new StoreDTO($this->storeQuery->findStoreByShopifyName('s')->getEvermileLocationId());
+        $storeDto = new StoreDTO($this->storeQuery->queryByShopifyName('s')->getEvermileLocationId());
         $quote = $this->quoteQuery->query($addressFrom, $addressTo, $storeDto);
 
         return new Response($this->getSerializer()->serialize(
