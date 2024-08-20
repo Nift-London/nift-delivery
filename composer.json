@@ -14,6 +14,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.2",
         "dunglas/doctrine-json-odm": "^1.4",
+        "easycorp/easyadmin-bundle": "^4.11",
         "evermile/delivery-api": "dev-main",
         "friendsofsymfony/rest-bundle": "^3.7",
         "guzzlehttp/guzzle": "^7.9",

@@ -1,5 +1,11 @@
-controllers:
+controllersQuote:
     resource:
         path: ../src/UI/Quote
         namespace: App\UI\Quote
+    type: attribute
+
+controllersAdmin:
+    resource:
+        path: ../src/UI/Admin
+        namespace: App\UI\Admin
     type: attribute
