@@ -7,6 +7,7 @@ namespace App\Quote\Infrastructure\Evermile;
 use App\Quote\Application\DTO\AddressDTO;
 use App\Quote\Application\DTO\QuoteDTO;
 use App\Quote\Application\DTO\StoreDTO;
+use App\Quote\Domain\Enum\QuoteTypeEnum;
 use App\Quote\Infrastructure\Evermile\Builder\EvermileQuoteRequestBuilder;
 use App\Quote\Infrastructure\Evermile\Client\EvermileClient;
 
@@ -53,6 +54,7 @@ final class EvermileQuoteProvider
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getEnd()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getStart()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getEnd()),
+                    QuoteTypeEnum::EVERMILE
                 );
             }
 

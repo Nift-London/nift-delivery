@@ -4,40 +4,59 @@ declare(strict_types=1);
 
 namespace App\Store\Domain\Entity;
 
+use App\Quote\Domain\Entity\Quote;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
-final class Store
+class Store
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private Uuid $id;
+
     #[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
     private \DateTimeImmutable $createdAt;
+
     #[ORM\Column(type: 'text', nullable: false)]
     private string $name;
+
     #[ORM\Column(type: 'text', nullable: false)]
     private string $street;
+
     #[ORM\Column(type: 'text', nullable: false)]
     private string $postalCode;
+
     #[ORM\Column(type: 'text', nullable: false)]
     private string $city;
+
     #[ORM\Column(type: 'text', nullable: false)]
     private string $evermileLocationId;
+
     #[ORM\Column(type: 'text', nullable: false)]
     private string $shopifyToken;
+
     #[ORM\Column(type: 'text', nullable: false)]
     private string $shopifyName;
+
     #[ORM\Column(type: 'text', nullable: false)]
     private string $shopifyDomain;
+
+    #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
+    private bool $enabled = false;
+
+    #[ORM\OneToMany(targetEntity: Quote::class, mappedBy: 'store')]
+    private Collection $quotes;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->quotes = new ArrayCollection();
     }
 
     public function getId(): Uuid
@@ -136,5 +155,22 @@ final class Store
     {
         $this->shopifyDomain = $shopifyDomain;
         return $this;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+        return $this;
+    }
+
+    /** @return Quote[]|Collection */
+    public function getQuotes(): Collection
+    {
+        return $this->quotes;
     }
 }

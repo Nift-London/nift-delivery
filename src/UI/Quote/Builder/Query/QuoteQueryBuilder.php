@@ -43,8 +43,8 @@ final class QuoteQueryBuilder
             $destinationAddress->getCity()
         );
 
-        $storeDTO = new StoreDTO($store->getEvermileLocationId());
+        $storeDTO = new StoreDTO($store->getId(), $store->getEvermileLocationId());
 
-        return new QuoteQueryDTO($addressFrom ?? null, $addressTo, $storeDTO);
+        return new QuoteQueryDTO($addressFrom ?? null, $addressTo, $storeDTO, $store->getId());
     }
 }

@@ -10,6 +10,6 @@ final class StoreValidator
 {
     public function isStoreValid(?Store $store): bool
     {
-        return !is_null($store);
+        return !is_null($store) && $store->isEnabled();
     }
 }

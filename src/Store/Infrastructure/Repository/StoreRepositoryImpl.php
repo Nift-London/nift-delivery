@@ -8,6 +8,7 @@ use App\Store\Domain\Entity\Store;
 use App\Store\Domain\Repository\StoreRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 final class StoreRepositoryImpl extends ServiceEntityRepository implements StoreRepository
 {
@@ -25,5 +26,10 @@ final class StoreRepositoryImpl extends ServiceEntityRepository implements Store
     public function findByShopifyDomain(string $shopifyDomain): ?Store
     {
         return $this->findOneBy(['shopifyDomain' => $shopifyDomain]);
+    }
+
+    public function findById(Uuid $id): ?Store
+    {
+        return $this->findOneBy(['id' => $id]);
     }
 }

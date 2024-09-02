@@ -8,6 +8,7 @@ use App\Store\Application\Exception\StoreValidationException;
 use App\Store\Application\Validator\StoreValidator;
 use App\Store\Domain\Entity\Store;
 use App\Store\Domain\Repository\StoreRepository;
+use Symfony\Component\Uid\Uuid;
 
 final class StoreProvider
 {
@@ -28,6 +29,20 @@ final class StoreProvider
         $store = $this->storeRepository->findByShopifyDomain($shopifyDomain);
 
         if (!$this->storeValidator->isStoreValid($store)) {
+            throw StoreValidationException::storeNotFoundException();
+        }
+
+        return $store;
+    }
+
+    /**
+     * @throws StoreValidationException
+     */
+    public function provideStoreById(Uuid $id): Store
+    {
+        $store = $this->storeRepository->findById($id);
+
+        if (is_null($store)) {
             throw StoreValidationException::storeNotFoundException();
         }
 
