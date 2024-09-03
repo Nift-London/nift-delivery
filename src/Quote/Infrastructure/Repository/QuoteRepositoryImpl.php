@@ -8,6 +8,7 @@ use App\Quote\Domain\Entity\Quote;
 use App\Quote\Domain\Repository\QuoteRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 final class QuoteRepositoryImpl extends ServiceEntityRepository implements QuoteRepository
 {
@@ -20,5 +21,10 @@ final class QuoteRepositoryImpl extends ServiceEntityRepository implements Quote
     {
         $this->getEntityManager()->persist($quote);
         $this->getEntityManager()->flush();
+    }
+
+    public function findById(Uuid $id): ?Quote
+    {
+        return $this->findOneBy(['id' => $id]);
     }
 }

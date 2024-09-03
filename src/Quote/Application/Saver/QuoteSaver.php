@@ -54,6 +54,7 @@ final class QuoteSaver
             $quote->setStore($store);
 
             $this->quoteRepository->save($quote);
+            $quoteDTO->setId($quote->getId()->jsonSerialize());
         }
     }
 }

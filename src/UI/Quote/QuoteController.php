@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Quote;
 
-use App\Quote\Infrastructure\Query\QuoteQuery;
+use App\Quote\Infrastructure\Query\ProposalQuoteQuery;
 use App\Store\Application\Exception\StoreValidationException;
 use App\UI\Quote\Builder\Request\QuoteForShopifyRequestBuilder;
 use App\UI\Quote\Builder\Query\QuoteQueryBuilder;
@@ -22,19 +22,20 @@ use Symfony\Component\Serializer\Serializer;
 #[AsController]
 final class QuoteController extends AbstractController
 {
-    private QuoteQuery $quoteQuery;
-    private QuoteResponseBuilder $quoteResponseBuilder;
+    private ProposalQuoteQuery $quoteQuery;
+    private QuoteQueryBuilder $quoteQueryBuilder;
 
-    public function __construct(QuoteQuery $quoteQuery, QuoteResponseBuilder $quoteResponseBuilder)
+    public function __construct(ProposalQuoteQuery $quoteQuery, QuoteQueryBuilder $quoteQueryBuilder)
     {
         $this->quoteQuery = $quoteQuery;
-        $this->quoteResponseBuilder = $quoteResponseBuilder;
+        $this->quoteQueryBuilder = $quoteQueryBuilder;
     }
 
     #[Route('/api/v1/quote/shopify', name: 'quote', methods: ['POST'])]
-    public function quoteForShopify(Request $request,
-        QuoteForShopifyRequestBuilder $quoteForShopifyRequestBuilder,
-        QuoteQueryBuilder $quoteQueryBuilder
+    public function quoteForShopify(
+        Request $request,
+        QuoteForShopifyRequestBuilder $requestBuilder,
+        QuoteResponseBuilder $responseBuilder
     ): Response {
         // todo make pretty request validator
         $shopifyDomain = $request->headers->get('X-Shopify-Shop-Domain');
@@ -43,10 +44,10 @@ final class QuoteController extends AbstractController
             return $this->json(['error' => 'Invalid shopify domain'], Response::HTTP_BAD_REQUEST);
         }
 
-        $quoteForShopifyRequest = $quoteForShopifyRequestBuilder->build($request);
+        $quoteForShopifyRequest = $requestBuilder->build($request);
 
         try {
-            $quoteQuery = $quoteQueryBuilder->build($quoteForShopifyRequest);
+            $quoteQuery = $this->quoteQueryBuilder->build($quoteForShopifyRequest);
         } catch (StoreValidationException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
@@ -54,7 +55,7 @@ final class QuoteController extends AbstractController
         $quote = $this->quoteQuery->query($quoteQuery);
 
         return new Response($this->getSerializer()->serialize(
-            ['rates' => $this->quoteResponseBuilder->build($quote)],
+            ['rates' => $responseBuilder->build($quote)],
             'json'
         ));
     }

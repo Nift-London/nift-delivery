@@ -1,11 +1,17 @@
-controllersQuote:
-    resource:
-        path: ../src/UI/Quote
-        namespace: App\UI\Quote
-    type: attribute
-
 controllersAdmin:
     resource:
         path: ../src/UI/Admin
         namespace: App\UI\Admin
+    type: attribute
+
+controllersOrder:
+    resource:
+        path: ../src/UI/Order
+        namespace: App\UI\Order
+    type: attribute
+
+controllersQuote:
+    resource:
+        path: ../src/UI/Quote
+        namespace: App\UI\Quote
     type: attribute

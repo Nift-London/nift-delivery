@@ -8,6 +8,7 @@ use App\Quote\Domain\Enum\QuoteTypeEnum;
 
 final class QuoteDTO
 {
+    private ?string $id;
     private string $externalId;
     private string $name;
     private string $code;
@@ -44,6 +45,12 @@ final class QuoteDTO
         $this->deliveryDateFrom = $deliveryDateFrom;
         $this->deliveryDateTo = $deliveryDateTo;
         $this->type = $type;
+    }
+
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getExternalId(): string
@@ -99,5 +106,10 @@ final class QuoteDTO
     public function getType(): QuoteTypeEnum
     {
         return $this->type;
+    }
+
+    public function getId(): ?string
+    {
+        return $this->id;
     }
 }

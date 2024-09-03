@@ -4,36 +4,28 @@ declare(strict_types=1);
 
 namespace App\Quote\Infrastructure\Query;
 
-use App\Quote\Application\Calculator\QuoteCalculator;
-use App\Quote\Application\DTO\ProposalQuotesDTO;
-use App\Quote\Application\Saver\QuoteSaver;
-use App\Quote\Infrastructure\Evermile\EvermileQuoteProvider;
-use App\Quote\Infrastructure\Query\DTO\QuoteQueryDTO;
+use App\Quote\Application\Exception\QuoteNotFoundException;
+use App\Quote\Domain\Entity\Quote;
+use App\Quote\Domain\Repository\QuoteRepository;
+use Symfony\Component\Uid\Uuid;
 
 final class QuoteQuery
 {
-    private EvermileQuoteProvider $evermileQuoteProvider;
-    private QuoteCalculator $quoteCalculator;
-    private QuoteSaver $quoteSaver;
+    private QuoteRepository $quoteRepository;
 
-    public function __construct(
-        EvermileQuoteProvider $evermileQuoteProvider,
-        QuoteCalculator $quoteCalculator,
-        QuoteSaver $quoteSaver
-    ) {
-        $this->evermileQuoteProvider = $evermileQuoteProvider;
-        $this->quoteCalculator = $quoteCalculator;
-        $this->quoteSaver = $quoteSaver;
-    }
-
-    public function query(QuoteQueryDTO $query): ProposalQuotesDTO
+    public function __construct(QuoteRepository $quoteRepository)
     {
-        // There will be more quote providers in the future. Just merge it in one $quotes array
-        $quotes = $this->evermileQuoteProvider->provide($query->getAddressFrom(), $query->getAddressTo(), $query->getStoreDTO());
-        $calculatedQuotes = $this->quoteCalculator->calculate($quotes);
-        $this->quoteSaver->save($calculatedQuotes, $query->getStoreId(), $query->getAddressTo());
-
-        return $calculatedQuotes;
+        $this->quoteRepository = $quoteRepository;
     }
 
+    public function query(Uuid $id): Quote
+    {
+        $quote = $this->quoteRepository->findById($id);
+
+        if (is_null($quote)) {
+            throw QuoteNotFoundException::storeNotFoundException($id);
+        }
+
+        return $this->quoteRepository->findById($id);
+    }
 }
