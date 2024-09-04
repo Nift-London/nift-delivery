@@ -47,6 +47,7 @@ final class EvermileClient
                 ],
             ]), $this->evermileMerchantId)->getId();
         } catch (\Exception $e) {
+            dd($e);
             return '';
         }
     }

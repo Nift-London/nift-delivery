@@ -19,6 +19,7 @@ final class DeliveryOrderer
     public function order(string $id): void
     {
         $orderResponse = $this->evermileClient->order($id);
+        dd($orderResponse);
         // todo save
     }
 }

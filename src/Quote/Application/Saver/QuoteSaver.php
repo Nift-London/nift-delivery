@@ -31,7 +31,7 @@ final class QuoteSaver
         $groupId = Uuid::v6();
 
         $this->saveQuote($proposalQuotesDTO->getFastestToday(), $store, $addressTo, $groupId);
-        $this->saveQuote($proposalQuotesDTO->getToday(), $store, $addressTo, $groupId);
+        $this->saveQuote($proposalQuotesDTO->getEveningToday(), $store, $addressTo, $groupId);
         $this->saveQuote($proposalQuotesDTO->getLatest(), $store, $addressTo, $groupId);
     }
 

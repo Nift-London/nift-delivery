@@ -19,7 +19,7 @@ final class QuoteCalculator
 
         $this->sortQuotes($quotes);
 
-        return new ProposalQuotesDTO($this->getTodayFastest($quotes), $this->getToday($quotes), $this->getLatest($quotes));
+        return new ProposalQuotesDTO($this->getTodayFastest($quotes), $this->getTodayEvening($quotes), $this->getLatest($quotes));
     }
 
     private function sortQuotes(array &$quotes): void
@@ -47,26 +47,15 @@ final class QuoteCalculator
     }
 
     /** @param QuoteDTO[] $quotes */
-    private function getToday(array $quotes): ?QuoteDTO
+    private function getTodayEvening(array $quotes): ?QuoteDTO
     {
-        $today = new \DateTimeImmutable();
-        $proposalQuote = null;
-        $cheapestOption = PHP_INT_MAX;
-
-        $skipFirst = 0;
         foreach ($quotes as $quote) {
-            if ($skipFirst == 0) {
-                $skipFirst++;
-                continue;
-            }
-
-            if ($quote->getDeliveryDateTo()->format('Ymd') == $today->format('Ymd') && $quote->getPrice() < $cheapestOption) {
-                $proposalQuote = $quote;
-                $cheapestOption = $quote->getPrice();
+            if ($quote->getName() === 'evening') {
+                return $quote;
             }
         }
 
-        return $proposalQuote;
+        return null;
     }
 
     /** @param QuoteDTO[] $quotes */

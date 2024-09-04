@@ -42,10 +42,9 @@ final class EvermileQuoteProvider
                 }
 
                 $proposal = $proposalOptional->getProposal();
-
                 $quotes[] = new QuoteDTO(
                     $proposal->getId(),
-                    $proposal->getModelName(),
+                    $proposalOptional->getLabel(),
                     $proposal->getModelName(),
                     $proposal->getModelName(),
                     $proposal->getPriceVat()->getValue(),

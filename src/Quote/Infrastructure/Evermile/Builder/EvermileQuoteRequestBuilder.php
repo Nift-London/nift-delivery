@@ -31,6 +31,15 @@ final class EvermileQuoteRequestBuilder
             'parcels' => [
                 [
                     'parcelType' => 'parcel',
+//                    'itemsList' => [
+//                        'description' => 'Pair of Jeans',
+//                        'quantity' => 1,
+//                        'value' => [
+//                            'value' => 5000,
+//                            'currency' => 'GBP'
+//                        ],
+//                        'weightKg' => 1
+//                    ],
                     'weightKg' => 1,
                     'dimensions' => [
                         'lengthCm' => 10,

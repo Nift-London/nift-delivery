@@ -7,13 +7,13 @@ namespace App\Quote\Application\DTO;
 final class ProposalQuotesDTO
 {
     private ?QuoteDTO $fastestToday;
-    private ?QuoteDTO $today;
+    private ?QuoteDTO $eveningToday;
     private ?QuoteDTO $latest;
 
-    public function __construct(?QuoteDTO $fastestToday, ?QuoteDTO $today, ?QuoteDTO $latest)
+    public function __construct(?QuoteDTO $fastestToday, ?QuoteDTO $eveningToday, ?QuoteDTO $latest)
     {
         $this->fastestToday = $fastestToday;
-        $this->today = $today;
+        $this->eveningToday = $eveningToday;
         $this->latest = $latest;
     }
 
@@ -27,9 +27,9 @@ final class ProposalQuotesDTO
         return $this->fastestToday;
     }
 
-    public function getToday(): ?QuoteDTO
+    public function getEveningToday(): ?QuoteDTO
     {
-        return $this->today;
+        return $this->eveningToday;
     }
 
     public function getLatest(): ?QuoteDTO
