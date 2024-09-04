@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Quote\Domain\Entity;
 
+use App\Order\Domain\Entity\DeliveryOrder;
 use App\Quote\Domain\Enum\QuoteTypeEnum;
 use App\Store\Domain\Entity\Store;
 use Doctrine\ORM\Mapping as ORM;
@@ -70,6 +71,9 @@ class Quote
     #[ORM\ManyToOne(targetEntity: Store::class, inversedBy: 'quotes')]
     #[ORM\JoinColumn(nullable: false)]
     private Store $store;
+
+    #[ORM\OneToOne(targetEntity: DeliveryOrder::class, inversedBy: 'quote')]
+    private ?DeliveryOrder $deliveryOrder;
 
     public function __construct()
     {
@@ -259,6 +263,17 @@ class Quote
     public function setGroupId(Uuid $groupId): self
     {
         $this->groupId = $groupId;
+        return $this;
+    }
+
+    public function getDeliveryOrder(): ?DeliveryOrder
+    {
+        return $this->deliveryOrder;
+    }
+
+    public function setDeliveryOrder(DeliveryOrder $deliveryOrder): self
+    {
+        $this->deliveryOrder = $deliveryOrder;
         return $this;
     }
 }

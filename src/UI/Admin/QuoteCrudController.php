@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class QuoteCrudController extends AbstractCrudController
 {
@@ -38,6 +39,7 @@ class QuoteCrudController extends AbstractCrudController
             DateTimeField::new('deliveryDateTo'),
             ChoiceField::new('type')->hideOnIndex(),
             MoneyField::new('price')->setCurrency('GBP'),
+            TextField::new('deliveryOrder.id'),
         ];
     }
 

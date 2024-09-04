@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Admin;
 
+use App\Order\Domain\Entity\DeliveryOrder;
 use App\Quote\Domain\Entity\Quote;
 use App\Store\Domain\Entity\Store;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -37,6 +38,7 @@ final class AdminController extends AbstractDashboardController
 
             MenuItem::linkToCrud('Stores', 'fa fa-store', Store::class),
             MenuItem::linkToCrud('Quotes', 'fa fa-box', Quote::class),
+            MenuItem::linkToCrud('Orders', 'fa fa-truck-fast', DeliveryOrder::class),
         ];
     }
 }

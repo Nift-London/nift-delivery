@@ -28,6 +28,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Quote/Domain/Entity'
                 prefix: 'App\Quote\Domain\Entity'
                 alias: App\Quote
+            App\Order:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Order/Domain/Entity'
+                prefix: 'App\Order\Domain\Entity'
+                alias: App\Order
 
 when@test:
     doctrine:

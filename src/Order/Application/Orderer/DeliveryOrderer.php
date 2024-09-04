@@ -16,10 +16,8 @@ final class DeliveryOrderer
         $this->evermileClient = $evermileClient;
     }
 
-    public function order(string $id): void
+    public function order(string $id): string
     {
-        $orderResponse = $this->evermileClient->order($id);
-        dd($orderResponse);
-        // todo save
+        return $this->evermileClient->order($id)->getId();
     }
 }
