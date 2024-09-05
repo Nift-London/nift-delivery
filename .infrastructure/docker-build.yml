@@ -9,7 +9,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build --build-arg ASSET_URL=$ASSET_URL --build-argument COMPOSER_AUTH='{"github-oauth":{"github.com":"$COMPOSER_AUTH_TOKEN"}}' --target backend -t $IMAGE_REPO_URL:backend-$CODEBUILD_BUILD_NUMBER .
+      - docker build --build-arg ASSET_URL=$ASSET_URL --build-arg COMPOSER_AUTH='{"github-oauth":{"github.com":"$COMPOSER_AUTH_TOKEN"}}' --target backend -t $IMAGE_REPO_URL:backend-$CODEBUILD_BUILD_NUMBER .
       - docker build --build-arg ASSET_URL=$ASSET_URL --target nginx -t $IMAGE_REPO_URL:nginx-$CODEBUILD_BUILD_NUMBER .
   post_build:
     commands:
