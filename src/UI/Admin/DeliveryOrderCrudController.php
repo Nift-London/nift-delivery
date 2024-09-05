@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 
 class DeliveryOrderCrudController extends AbstractCrudController
@@ -21,6 +22,7 @@ class DeliveryOrderCrudController extends AbstractCrudController
         return [
             IdField::new('id'),
             IdField::new('externalId'),
+            DateTimeField::new('createdAt'),
         ];
     }
 
