@@ -1,3 +1,10 @@
+data "aws_secretsmanager_secret" "composer-auth-token" {
+  name = "${var.environment}/composer-auth-token"
+}
+
+data "aws_secretsmanager_secret_version" "composer-auth-token-version" {
+  secret_id     = data.aws_secretsmanager_secret.composer-auth-token.id
+}
 
 module "deployment" {
   source     = "registry.terraform.io/l4gdev/codedeploy-ecr/aws"
@@ -16,6 +23,7 @@ module "deployment" {
 
   build_envs = {
     IMAGE_REPO_URL  = aws_ecr_repository.reg.repository_url
+    COMPOSER_AUTH_TOKEN = jsondecode(data.aws_secretsmanager_secret_version.composer-auth-token-version.secret_string)["secret"]
     DOCKER_BUILDKIT = "1"
   }
 

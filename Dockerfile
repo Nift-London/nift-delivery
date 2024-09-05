@@ -1,10 +1,12 @@
 # syntax=docker/dockerfile:latest
 #################### PHP BACKEND VENDOR INSTALL ####################
-FROM composer:2.4 as vendor
+FROM composer:2.4 AS vendor
 
-COPY database/ database/
 COPY composer.json composer.json
 COPY composer.lock composer.lock
+
+ARG COMPOSER_AUTH='{"github-oauth":{"github.com":"TempToken"}}'
+ENV COMPOSER_AUTH=${COMPOSER_AUTH}
 
 RUN composer install                \
             --ignore-platform-reqs  \
