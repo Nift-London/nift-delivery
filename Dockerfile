@@ -50,7 +50,7 @@ RUN curl -LO https://github.com/DataDog/dd-trace-php/releases/latest/download/da
 RUN php datadog-setup.php --php-bin=all
 
 COPY --chown=www-data:www-data . /var/www/html
-COPY --chown=www-data:www-data --from=vendor /vendor/ /var/www/html/vendor/
+COPY --chown=www-data:www-data --from=vendor /app/vendor/ /var/www/html/vendor/
 COPY --chown=www-data:www-data  public/ /var/www/html/
 
 COPY .infrastructure/configurations/php/entrypoint.sh entrypoint.sh
