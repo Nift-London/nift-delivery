@@ -2,11 +2,13 @@
 
 namespace App\UI\Admin;
 
+use App\Order\Domain\Entity\DeliveryOrder;
 use App\Quote\Domain\Entity\Quote;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -39,7 +41,10 @@ class QuoteCrudController extends AbstractCrudController
             DateTimeField::new('deliveryDateTo'),
             ChoiceField::new('type')->hideOnIndex(),
             MoneyField::new('price')->setCurrency('GBP'),
-            TextField::new('deliveryOrder.id'),
+            AssociationField::new('deliveryOrder')
+                ->formatValue(function (?DeliveryOrder $val) {
+                    return is_null($val) ? '-' : '<i class="fa-solid fa-truck-fast"></i>';
+                }),
         ];
     }
 
