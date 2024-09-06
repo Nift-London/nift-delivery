@@ -23,7 +23,7 @@ module "deployment" {
 
   build_envs = {
     IMAGE_REPO_URL  = aws_ecr_repository.reg.repository_url
-    COMPOSER_AUTH_TOKEN = jsondecode(data.aws_secretsmanager_secret_version.composer-auth-token-version.secret_string)["secret"]
+#    COMPOSER_AUTH_TOKEN = jsondecode(data.aws_secretsmanager_secret_version.composer-auth-token-version.secret_string)["secret"]
     DOCKER_BUILDKIT = "1"
   }
 
