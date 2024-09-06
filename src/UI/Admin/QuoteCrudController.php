@@ -4,6 +4,7 @@ namespace App\UI\Admin;
 
 use App\Order\Domain\Entity\DeliveryOrder;
 use App\Quote\Domain\Entity\Quote;
+use App\Store\Domain\Entity\Store;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -25,8 +26,10 @@ class QuoteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            IdField::new('groupId'),
+            AssociationField::new('store')
+                ->formatValue(function (?Store $val) {
+                    return $val->getName();
+                }),
             IdField::new('externalId')->hideOnIndex(),
             DateTimeField::new('createdAt'),
             IdField::new('pickupStreet')->hideOnIndex(),
