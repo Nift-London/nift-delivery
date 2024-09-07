@@ -20,9 +20,8 @@ class StoreCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id')->setFormTypeOption('disabled','disabled')->hideWhenCreating(),
-            DateTimeField::new('createdAt')->setFormTypeOption('disabled','disabled')->hideWhenCreating(),
             TextField::new('name'),
+            DateTimeField::new('createdAt')->setFormTypeOption('disabled','disabled')->hideWhenCreating(),
             TextField::new('street'),
             TextField::new('postalCode'),
             TextField::new('city'),
