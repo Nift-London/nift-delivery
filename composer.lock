@@ -1412,7 +1412,7 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "git@github.com:Nift-London/evermile-sdk.git",
+                "url": "https://github.com/Nift-London/evermile-sdk.git",
                 "reference": "50fccfc2f444a6746da76c345024cb7b04614744"
             },
             "dist": {
