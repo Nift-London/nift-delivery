@@ -3,6 +3,10 @@ data "terraform_remote_state" "backend" {
   config  = var.env_terraform_backend_config
 }
 
+resource "aws_ecr_repository" "reg" {
+  name = "${var.environment}-${var.application_name}"
+}
+
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
@@ -47,6 +51,6 @@ locals {
   )
 }
 
-resource "aws_s3_bucket" "dave" {
+resource "aws_s3_bucket" "delivery" {
   bucket = "${var.environment}-${var.application_name}-${data.aws_caller_identity.current.account_id}"
 }
