@@ -2,7 +2,7 @@ resource "aws_ecr_repository" "reg" {
   name = "${var.environment}-${var.application_name}"
 }
 
-module "delivery" {
+module "dave" {
   source  = "registry.terraform.io/l4gdev/ecs-service/aws"
   version = "0.3.4"
 

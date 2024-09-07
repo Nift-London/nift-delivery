@@ -37,7 +37,7 @@ locals {
     MAIL_PASSWORD     = "BPHLi6XWORlYKAfWaOpZxLi9bMEYUJi0amZx3jJO6JO+"
     MAIL_ENCRYPTION   = "starttls"
     MAIL_FROM_ADDRESS = "no-reply@nift.london"
-    MAIL_FROM_NAME    = "NIFT Delivery"
+    MAIL_FROM_NAME    = "NIFT delivery"
   }
 
   full_app_envs = merge(
@@ -47,6 +47,6 @@ locals {
   )
 }
 
-resource "aws_s3_bucket" "delivery" {
+resource "aws_s3_bucket" "dave" {
   bucket = "${var.environment}-${var.application_name}-${data.aws_caller_identity.current.account_id}"
 }

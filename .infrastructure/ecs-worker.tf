@@ -1,4 +1,4 @@
-#module "delivery-worker" {
+#module "dave-worker" {
 #  source  = "registry.terraform.io/l4gdev/ecs-service/aws"
 #  version = "0.3.4"
 #

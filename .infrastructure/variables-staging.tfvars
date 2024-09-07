@@ -1,7 +1,7 @@
-application_name = "delivery"
+application_name = "dave"
 
 domains = [
-  "delivery.staging.nift.london"
+  "dave.staging.nift.london"
 ]
 
 repository_branch = "staging"

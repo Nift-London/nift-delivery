@@ -2,7 +2,7 @@
 #  region = "eu-west-2"
 #  default_tags {
 #    tags = {
-#      Service    = "nift-delivery"
+#      Service    = "nift-dave"
 #      managed_by = "Terraform"
 #    }
 #  }
@@ -20,14 +20,14 @@
 #  backend "s3" {
 #    region = "eu-west-2"
 #    bucket = "tfstate-235530087925"
-#    key    = "dev/niftdelivery.tfstate"
+#    key    = "dev/niftdave.tfstate"
 #  }
 #}
 provider "aws" {
   region = "eu-west-2"
   default_tags {
     tags = {
-      Service    = "nift-delivery"
+      Service    = "nift-dave"
       managed_by = "Terraform"
     }
   }
@@ -45,7 +45,7 @@ terraform {
   backend "s3" {
     region = "eu-west-2"
     bucket = "tfstate-235530087925"
-    key    = "staging/niftdelivery.tfstate"
+    key    = "staging/niftdave.tfstate"
   }
 }
 
