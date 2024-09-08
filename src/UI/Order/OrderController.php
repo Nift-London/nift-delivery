@@ -37,7 +37,7 @@ final class OrderController extends AbstractController
     }
 
     // todo remove
-    #[Route('/', name: 'order', methods: ['GET'])]
+    #[Route('/', name: 'index', methods: ['GET'])]
     public function index(Request $request): Response {
         return $this->json([]);
     }
