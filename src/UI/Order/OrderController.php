@@ -35,4 +35,10 @@ final class OrderController extends AbstractController
 
         return $this->json([]);
     }
+
+    // todo remove
+    #[Route('/', name: 'order', methods: ['GET'])]
+    public function index(Request $request): Response {
+        return $this->json([]);
+    }
 }
