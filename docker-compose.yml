@@ -2,12 +2,12 @@ version: '3.8'
 services:
   php:
     build:
-      context: php
+      context: docker/php
       target: "base"
     volumes:
       - .:/var/www/delivery:delegated
-#    links:
-#      - mysql
+    links:
+      - mysql
   nginx:
     image: nginx:1.25
     ports:
@@ -17,11 +17,11 @@ services:
       - ./docker/nginx:/etc/nginx/conf.d
     depends_on:
       - php
-#  mysql:
-#    image: mysql:8
-#    environment:
-#      MYSQL_DATABASE: 'delivery'
-#      MYSQL_PASSWORD: 'password'
-#      MYSQL_ROOT_PASSWORD: 'password'
-#    ports:
-#      - '3308:3306'
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: 'delivery'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3308:3306'

@@ -2,8 +2,8 @@
 #################### PHP BACKEND VENDOR INSTALL ####################
 FROM composer:2.4 AS vendor
 
-COPY ../composer.json composer.json
-COPY ../composer.lock composer.lock
+COPY composer.json composer.json
+COPY composer.lock composer.lock
 
 #ARG COMPOSER_AUTH='{"github-oauth":{"github.com":"TempToken"}}'
 #ENV COMPOSER_AUTH=${COMPOSER_AUTH}
@@ -51,19 +51,19 @@ RUN php datadog-setup.php --php-bin=all
 
 COPY --chown=www-data:www-data .. /var/www/html
 COPY --chown=www-data:www-data --from=vendor /app/vendor/ /var/www/html/vendor/
-COPY --chown=www-data:www-data  ../public /var/www/html/
+COPY --chown=www-data:www-data  public /var/www/html/
 
-COPY ../.infrastructure/configurations/php/entrypoint.sh entrypoint.sh
+COPY .infrastructure/configurations/php/entrypoint.sh entrypoint.sh
 
 CMD ["bash","entrypoint.sh"]
 
 #################### NGINX IMAGE ####################
 FROM nginx:latest as nginx
 
-COPY ../.infrastructure/configurations/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY ../.infrastructure/configurations/nginx/production.conf /etc/nginx/conf.d/production.conf
+COPY .infrastructure/configurations/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY .infrastructure/configurations/nginx/production.conf /etc/nginx/conf.d/production.conf
 
-COPY --chown=nginx:nginx ../public /var/www/html/
+COPY --chown=nginx:nginx public /var/www/html/
 
 WORKDIR /var/www/html/
 
