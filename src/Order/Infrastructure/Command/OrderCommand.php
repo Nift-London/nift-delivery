@@ -7,6 +7,7 @@ namespace App\Order\Infrastructure\Command;
 use App\Order\Application\Orderer\DeliveryOrderer;
 use App\Order\Domain\Entity\DeliveryOrder;
 use App\Order\Domain\Repository\DeliveryOrderRepository;
+use App\Order\Infrastructure\Command\DTO\OrderCommandDTO;
 use App\Quote\Infrastructure\Query\QuoteQuery;
 use Symfony\Component\Uid\Uuid;
 
@@ -26,11 +27,12 @@ final class OrderCommand
         $this->orderRepository = $orderRepository;
     }
 
-    public function order(string $shippingId): void
+    public function order(OrderCommandDTO $orderCommandDTO): void
     {
-        $quote = $this->quoteQuery->query(Uuid::fromString($shippingId));
-        $externalOrderId = $this->deliveryOrderer->order($quote->getExternalId());
+        $quote = $this->quoteQuery->query(Uuid::fromString($orderCommandDTO->getShippingId()));
+        $externalOrderId = $this->deliveryOrderer->order($quote->getExternalId(), $orderCommandDTO);
         $order = new DeliveryOrder($quote, $externalOrderId);
+        $order->setShipmentRecipientName($orderCommandDTO->getContactName());
         $this->orderRepository->save($order);
     }
 }

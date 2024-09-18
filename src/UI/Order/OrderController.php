@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Order;
 
+use App\Order\Infrastructure\Command\DTO\OrderCommandDTO;
 use App\Order\Infrastructure\Command\OrderCommand;
 use App\Quote\Application\Exception\QuoteNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,11 +25,14 @@ final class OrderController extends AbstractController
 
     #[Route('/api/v1/order/shopify', name: 'order', methods: ['POST'])]
     public function orderForShopify(Request $request): Response {
-        $shippingCode = json_decode($request->getContent(), true)['shipping_lines'][0]['code'];
-        $shippingId = explode('#', $shippingCode)[1];
+        $requestArr = json_decode($request->getContent(), true);
+        $shippingId = explode('#', $requestArr['shipping_lines'][0]['code'])[1];
+        $shippingContactName = $requestArr['shipping_address']['name'];
+
+        $orderCommand = new OrderCommandDTO($shippingId, $shippingContactName);
 
         try {
-            $this->orderCommand->order($shippingId);
+            $this->orderCommand->order($orderCommand);
         } catch (QuoteNotFoundException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         }

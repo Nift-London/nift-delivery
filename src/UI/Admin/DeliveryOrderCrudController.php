@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class DeliveryOrderCrudController extends AbstractCrudController
 {
@@ -27,6 +28,7 @@ class DeliveryOrderCrudController extends AbstractCrudController
                     return $val->getStore()->getName() . '#' . $val->getId();
                 }),
             IdField::new('externalId')->hideOnIndex(),
+            TextField::new('shipmentRecipientName'),
             DateTimeField::new('createdAt'),
         ];
     }

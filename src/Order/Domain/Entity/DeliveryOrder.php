@@ -21,6 +21,9 @@ class DeliveryOrder
     #[ORM\Column(type: 'text')]
     private string $externalId;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shipmentRecipientName;
+
     #[ORM\Column(type: 'datetimetz_immutable')]
     private \DateTimeImmutable $createdAt;
 
@@ -53,5 +56,16 @@ class DeliveryOrder
     public function getQuote(): Quote
     {
         return $this->quote;
+    }
+
+    public function getShipmentRecipientName(): ?string
+    {
+        return $this->shipmentRecipientName;
+    }
+
+    public function setShipmentRecipientName(string $shipmentRecipientName): self
+    {
+        $this->shipmentRecipientName = $shipmentRecipientName;
+        return $this;
     }
 }

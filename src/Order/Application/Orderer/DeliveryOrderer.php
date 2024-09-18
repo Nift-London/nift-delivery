@@ -6,6 +6,7 @@ namespace App\Order\Application\Orderer;
 
 // in future switch with types
 use App\Common\Evermile\Client\EvermileClient;
+use App\Order\Infrastructure\Command\DTO\OrderCommandDTO;
 
 final class DeliveryOrderer
 {
@@ -16,8 +17,8 @@ final class DeliveryOrderer
         $this->evermileClient = $evermileClient;
     }
 
-    public function order(string $id): string
+    public function order(string $externalId, OrderCommandDTO $orderCommandDTO): string
     {
-        return $this->evermileClient->order($id)->getId();
+        return $this->evermileClient->order($externalId, $orderCommandDTO->getContactName())->getId();
     }
 }
