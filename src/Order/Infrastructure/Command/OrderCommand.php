@@ -8,6 +8,7 @@ use App\Order\Application\Orderer\DeliveryOrderer;
 use App\Order\Domain\Entity\DeliveryOrder;
 use App\Order\Domain\Repository\DeliveryOrderRepository;
 use App\Order\Infrastructure\Command\DTO\OrderCommandDTO;
+use App\Quote\Domain\Entity\Quote;
 use App\Quote\Infrastructure\Query\QuoteQuery;
 use Symfony\Component\Uid\Uuid;
 
@@ -31,8 +32,24 @@ final class OrderCommand
     {
         $quote = $this->quoteQuery->query(Uuid::fromString($orderCommandDTO->getShippingId()));
         $externalOrderId = $this->deliveryOrderer->order($quote->getExternalId(), $orderCommandDTO);
+
+        $this->createOrder($quote, $externalOrderId, $orderCommandDTO);
+    }
+
+    public function createOrder(Quote $quote, string $externalOrderId, OrderCommandDTO $orderCommandDTO): void
+    {
         $order = new DeliveryOrder($quote, $externalOrderId);
+
         $order->setShipmentRecipientName($orderCommandDTO->getContactName());
+
+        if ($orderCommandDTO->getContactPhone()) {
+            $order->setShipmentContactPhone($orderCommandDTO->getContactPhone());
+        }
+
+        if ($orderCommandDTO->getContactEmail()) {
+            $order->setShipmentContactEmail($orderCommandDTO->getContactEmail());
+        }
+
         $this->orderRepository->save($order);
     }
 }

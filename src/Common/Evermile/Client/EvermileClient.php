@@ -34,15 +34,23 @@ final class EvermileClient
         return $apiInstance->quotePost(new QuotePostRequest($requestData), $this->evermileMerchantId);
     }
 
-    public function order(string $id, string $contactName): OrderPost201Response
+    public function order(string $id, string $contactName, ?string $contactPhone, ?string $contactEmail): OrderPost201Response
     {
         $apiInstance = new OrdersApi(new Client(), Configuration::getDefaultConfiguration());
 
+        $dropoffContactDetails['contactName'] = $contactName;
+
+        if (!is_null($contactPhone)) {
+            $dropoffContactDetails['contactPhone'] = $contactPhone;
+        }
+
+        if (!is_null($contactEmail)) {
+            $dropoffContactDetails['contactEmail'] = $contactEmail;
+        }
+
         return $apiInstance->orderPost(new OrderPostRequest([
             'proposal_id' => $id,
-            'dropoff_contact_details' => [
-                'contactName' => $contactName
-            ],
+            'dropoff_contact_details' => $dropoffContactDetails,
         ]), $this->evermileMerchantId);
     }
 }

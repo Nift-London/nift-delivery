@@ -19,6 +19,11 @@ final class DeliveryOrderer
 
     public function order(string $externalId, OrderCommandDTO $orderCommandDTO): string
     {
-        return $this->evermileClient->order($externalId, $orderCommandDTO->getContactName())->getId();
+        return $this->evermileClient->order(
+            $externalId,
+            $orderCommandDTO->getContactName(),
+            $orderCommandDTO->getContactPhone(),
+            $orderCommandDTO->getContactEmail()
+        )->getId();
     }
 }

@@ -25,11 +25,13 @@ class DeliveryOrderCrudController extends AbstractCrudController
         return [
             AssociationField::new('quote')
                 ->formatValue(function (Quote $val) {
-                    return $val->getStore()->getName() . '#' . $val->getId();
+                    return $val->getStore()->getName() . '#' . substr($val->getId(), -12);
                 }),
             IdField::new('externalId')->hideOnIndex(),
-            TextField::new('shipmentRecipientName'),
             DateTimeField::new('createdAt'),
+            TextField::new('shipmentRecipientName'),
+            TextField::new('shipmentContactPhone'),
+            TextField::new('shipmentContactEmail'),
         ];
     }
 
@@ -42,5 +44,11 @@ class DeliveryOrderCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::EDIT)
             ->remove(Crud::PAGE_DETAIL, Action::DELETE)
             ->add(Crud::PAGE_INDEX, Action::DETAIL);
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setDefaultSort(['createdAt' => 'DESC']);
     }
 }

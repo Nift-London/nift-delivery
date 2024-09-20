@@ -24,6 +24,12 @@ class DeliveryOrder
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $shipmentRecipientName;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shipmentContactPhone;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shipmentContactEmail;
+
     #[ORM\Column(type: 'datetimetz_immutable')]
     private \DateTimeImmutable $createdAt;
 
@@ -66,6 +72,28 @@ class DeliveryOrder
     public function setShipmentRecipientName(string $shipmentRecipientName): self
     {
         $this->shipmentRecipientName = $shipmentRecipientName;
+        return $this;
+    }
+
+    public function getShipmentContactPhone(): ?string
+    {
+        return $this->shipmentContactPhone;
+    }
+
+    public function setShipmentContactPhone(string $shipmentContactPhone): self
+    {
+        $this->shipmentContactPhone = $shipmentContactPhone;
+        return $this;
+    }
+
+    public function getShipmentContactEmail(): ?string
+    {
+        return $this->shipmentContactEmail;
+    }
+
+    public function setShipmentContactEmail(string $shipmentContactEmail): self
+    {
+        $this->shipmentContactEmail = $shipmentContactEmail;
         return $this;
     }
 }
