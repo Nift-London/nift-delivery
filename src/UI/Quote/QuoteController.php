@@ -40,6 +40,8 @@ final class QuoteController extends AbstractController
         QuoteForShopifyRequestBuilder $requestBuilder,
         QuoteResponseBuilder $responseBuilder
     ): Response {
+        $this->logger->logRequest($request->headers->all(), $request->toArray());
+
         // todo make pretty request validator
         $shopifyDomain = $request->headers->get('X-Shopify-Shop-Domain');
 

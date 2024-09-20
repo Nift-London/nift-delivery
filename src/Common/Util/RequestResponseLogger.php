@@ -23,4 +23,11 @@ class RequestResponseLogger
             '[DELIVERY_APP] Request headers: ' . json_encode($requestHeaders) . ' Request: ' . json_encode($request) . ' | ' . 'Response: ' . $responseJson
         );
     }
+
+    public function logRequest(array $requestHeaders, array $request): void
+    {
+        $this->logger->info(
+            '[DELIVERY_APP] Request headers: ' . json_encode($requestHeaders) . ' Request: ' . json_encode($request)
+        );
+    }
 }
