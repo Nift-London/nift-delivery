@@ -5,7 +5,7 @@ monolog:
     handlers:
         request-response-evermile:
             type: rotating_file
-            path: "%kernel.logs_dir%/request-response-evemile.log"
+            path: "php://stdout"
             level: info
             max_files: 30
             channels: request_response_evermile
@@ -15,7 +15,7 @@ when@dev:
         handlers:
             main:
                 type: stream
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                path: "php://stdout"
                 level: debug
                 channels: ["!event"]
             # uncomment to get logging in your browser
@@ -42,7 +42,7 @@ when@test:
                 channels: ["!event"]
             nested:
                 type: stream
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                path: "php://stdout"
                 level: debug
 
 when@prod:
