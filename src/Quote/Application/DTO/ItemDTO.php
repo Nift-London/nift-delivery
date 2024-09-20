@@ -7,12 +7,12 @@ namespace App\Quote\Application\DTO;
 final class ItemDTO
 {
     private string $name;
-    private string $sku;
+    private ?string $sku;
     private int $quantity;
     private int $price;
     private int $weightInGrams;
 
-    public function __construct(string $name, string $sku, int $quantity, int $price, int $weightInGrams)
+    public function __construct(string $name, ?string $sku, int $quantity, int $price, int $weightInGrams)
     {
         $this->name = $name;
         $this->sku = $sku;
@@ -26,7 +26,7 @@ final class ItemDTO
         return $this->name;
     }
 
-    public function getSku(): string
+    public function getSku(): ?string
     {
         return $this->sku;
     }
