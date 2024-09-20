@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Quote;
 
+use App\Common\Util\RequestResponseLogger;
 use App\Quote\Infrastructure\Query\ProposalQuoteQuery;
 use App\Store\Application\Exception\StoreValidationException;
 use App\UI\Quote\Builder\Request\QuoteForShopifyRequestBuilder;
@@ -24,11 +25,13 @@ final class QuoteController extends AbstractController
 {
     private ProposalQuoteQuery $quoteQuery;
     private QuoteQueryBuilder $quoteQueryBuilder;
+    private RequestResponseLogger $logger;
 
-    public function __construct(ProposalQuoteQuery $quoteQuery, QuoteQueryBuilder $quoteQueryBuilder)
+    public function __construct(ProposalQuoteQuery $quoteQuery, QuoteQueryBuilder $quoteQueryBuilder, RequestResponseLogger $logger)
     {
         $this->quoteQuery = $quoteQuery;
         $this->quoteQueryBuilder = $quoteQueryBuilder;
+        $this->logger = $logger;
     }
 
     #[Route('/api/v1/quote/shopify', name: 'quote', methods: ['POST'])]
@@ -54,10 +57,14 @@ final class QuoteController extends AbstractController
 
         $quote = $this->quoteQuery->query($quoteQuery);
 
-        return new Response($this->getSerializer()->serialize(
+        $response = $this->getSerializer()->serialize(
             ['rates' => $responseBuilder->build($quote)],
             'json'
-        ));
+        );
+
+        $this->logger->log($request->headers->all(), $request->toArray(), $response);
+
+        return new Response($response);
     }
 
     // todo setup default for all

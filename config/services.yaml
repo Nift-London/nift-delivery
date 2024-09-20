@@ -37,3 +37,7 @@ services:
     App\Common\Util\EvermileRequestResponseLogger:
         arguments:
             - '@monolog.logger.request_response_evermile'
+
+    App\Common\Util\RequestResponseLogger:
+        arguments:
+            - '@monolog.logger.request_response'
