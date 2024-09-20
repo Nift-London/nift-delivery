@@ -4,10 +4,9 @@ monolog:
         - request_response_evermile
     handlers:
         request-response-evermile:
-            type: rotating_file
+            type: stream
             path: "php://stdout"
             level: info
-            max_files: 30
             channels: request_response_evermile
 
 when@dev:

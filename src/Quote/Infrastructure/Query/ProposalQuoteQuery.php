@@ -29,9 +29,15 @@ final class ProposalQuoteQuery
     public function query(QuoteQueryDTO $query): ProposalQuotesDTO
     {
         // There will be more quote providers in the future. Just merge it in one $quotes array
-        $quotes = $this->evermileQuoteProvider->provide($query->getAddressFrom(), $query->getAddressTo(), $query->getStoreDTO());
+        $quotes = $this->evermileQuoteProvider->provide(
+            $query->getAddressFrom(),
+            $query->getAddressTo(),
+            $query->getStoreDTO(),
+            $query->getItems()
+        );
+
         $calculatedQuotes = $this->quoteCalculator->calculate($quotes);
-        $this->quoteSaver->save($calculatedQuotes, $query->getStoreId(), $query->getAddressTo());
+        $this->quoteSaver->save($calculatedQuotes, $query->getStoreDTO()->getId(), $query->getAddressTo());
 
         return $calculatedQuotes;
     }

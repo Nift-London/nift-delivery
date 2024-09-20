@@ -5,22 +5,27 @@ declare(strict_types=1);
 namespace App\Quote\Infrastructure\Query\DTO;
 
 use App\Quote\Application\DTO\AddressDTO;
+use App\Quote\Application\DTO\ItemDTO;
 use App\Quote\Application\DTO\StoreDTO;
-use Symfony\Component\Uid\Uuid;
 
 final class QuoteQueryDTO
 {
     private ?AddressDTO $addressFrom;
     private AddressDTO $addressTo;
     private StoreDTO $storeDTO;
-    private Uuid $storeId;
+    /** @var ItemDTO[] */
+    private array $items;
 
-    public function __construct(?AddressDTO $addressFrom, AddressDTO $addressTo, StoreDTO $storeDTO, Uuid $storeId)
-    {
+    public function __construct(
+        ?AddressDTO $addressFrom,
+        AddressDTO $addressTo,
+        StoreDTO $storeDTO,
+        array $items
+    ) {
         $this->addressFrom = $addressFrom;
         $this->addressTo = $addressTo;
         $this->storeDTO = $storeDTO;
-        $this->storeId = $storeId;
+        $this->items = $items;
     }
 
     public function getAddressFrom(): ?AddressDTO
@@ -38,8 +43,9 @@ final class QuoteQueryDTO
         return $this->storeDTO;
     }
 
-    public function getStoreId(): Uuid
+    /** @return ItemDTO[] */
+    public function getItems(): array
     {
-        return $this->storeId;
+        return $this->items;
     }
 }

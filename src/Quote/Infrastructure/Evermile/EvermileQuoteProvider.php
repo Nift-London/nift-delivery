@@ -6,6 +6,7 @@ namespace App\Quote\Infrastructure\Evermile;
 
 use App\Common\Evermile\Client\EvermileClient;
 use App\Quote\Application\DTO\AddressDTO;
+use App\Quote\Application\DTO\ItemDTO;
 use App\Quote\Application\DTO\QuoteDTO;
 use App\Quote\Application\DTO\StoreDTO;
 use App\Quote\Domain\Enum\QuoteTypeEnum;
@@ -23,13 +24,16 @@ final class EvermileQuoteProvider
     }
 
     // todo in future handle $addressFrom as priority, for now $store->evermileLocationId is enough
-    /** @return QuoteDTO[] */
-    public function provide(?AddressDTO $addressFrom, AddressDTO $addressTo, StoreDTO $store): array
+    /**
+     * @param ItemDTO[] $items
+     * @return QuoteDTO[]
+     */
+    public function provide(?AddressDTO $addressFrom, AddressDTO $addressTo, StoreDTO $store, array $items): array
     {
         $quotes = [];
 
         try {
-            $response = $this->evermileClient->getQuote($this->evermileQuoteRequestBuilder->build($addressTo, $store));
+            $response = $this->evermileClient->getQuote($this->evermileQuoteRequestBuilder->build($addressTo, $store, $items));
         } catch (\Exception $e) {
             // todo log exception
             return $quotes;
