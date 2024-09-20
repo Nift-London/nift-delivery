@@ -33,3 +33,7 @@ services:
             - '%env(EVERMILE_AUTH_HOST)%'
             - '%env(EVERMILE_CLIENT_ID)%'
             - '%env(EVERMILE_CLIENT_SECRET)%'
+
+    App\Common\Util\EvermileRequestResponseLogger:
+        arguments:
+            - '@monolog.logger.request_response_evermile'

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Common\Evermile\Client;
 
+use App\Common\Util\EvermileRequestResponseLogger;
 use GuzzleHttp\Client;
 use OpenAPI\Client\Api\OrdersApi;
 use OpenAPI\Client\Api\QuotesApi;
@@ -17,21 +18,30 @@ use OpenAPI\Client\Model\QuotePostRequest;
 final class EvermileClient
 {
     private string $evermileMerchantId;
+    private EvermileRequestResponseLogger $logger;
 
-    public function __construct(string $host, string $evermileMerchantId, EvermileAuthenticator $evermileAuthenticator)
-    {
+    public function __construct(
+        string $host,
+        string $evermileMerchantId,
+        EvermileAuthenticator $evermileAuthenticator,
+        EvermileRequestResponseLogger $logger
+    ) {
         $this->evermileMerchantId = $evermileMerchantId;
 
         $evermileAuthenticator->authorize();
         Configuration::getDefaultConfiguration()->setHost($host);
+        $this->logger = $logger;
     }
 
     public function getQuote(array $requestData): QuotePost200Response
     {
         $apiInstance = new QuotesApi(new Client(), Configuration::getDefaultConfiguration());
+        $request = new QuotePostRequest($requestData);
+        $response = $apiInstance->quotePost($request, $this->evermileMerchantId);
 
-        // todo can i limit it for 2 days ahead?
-        return $apiInstance->quotePost(new QuotePostRequest($requestData), $this->evermileMerchantId);
+        $this->logger->log($request, $response);
+
+        return $response;
     }
 
     public function order(string $id, string $contactName, ?string $contactPhone, ?string $contactEmail): OrderPost201Response
@@ -48,9 +58,15 @@ final class EvermileClient
             $dropoffContactDetails['contactEmail'] = $contactEmail;
         }
 
-        return $apiInstance->orderPost(new OrderPostRequest([
+        $request = new OrderPostRequest([
             'proposal_id' => $id,
             'dropoff_contact_details' => $dropoffContactDetails,
-        ]), $this->evermileMerchantId);
+        ]);
+
+        $response = $apiInstance->orderPost($request, $this->evermileMerchantId);
+
+        $this->logger->log($request, $response);
+
+        return $response;
     }
 }
