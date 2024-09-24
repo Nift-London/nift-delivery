@@ -68,30 +68,6 @@ class Store implements \Stringable
         return $this;
     }
 
-    public function getStreet(): ?string
-    {
-        return null;
-        return $this->locations->first()->getStreet();
-    }
-
-    public function getPostalCode(): ?string
-    {
-        return null;
-        return $this->locations->first()->getPostalCode();
-    }
-
-    public function getCity(): ?string
-    {
-        return null;
-        return $this->locations->first()->getCity();
-    }
-
-    public function getEvermileLocationId(): ?string
-    {
-        return null;
-        return $this->locations->first()->getEvermileLocationId();
-    }
-
     public function getShopifyToken(): string
     {
         return $this->shopifyToken;

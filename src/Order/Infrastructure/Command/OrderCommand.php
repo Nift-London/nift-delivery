@@ -10,7 +10,6 @@ use App\Order\Domain\Repository\DeliveryOrderRepository;
 use App\Order\Infrastructure\Command\DTO\OrderCommandDTO;
 use App\Quote\Domain\Entity\Quote;
 use App\Quote\Infrastructure\Query\QuoteQuery;
-use Symfony\Component\Uid\Uuid;
 
 final class OrderCommand
 {
@@ -30,10 +29,16 @@ final class OrderCommand
 
     public function order(OrderCommandDTO $orderCommandDTO): void
     {
-        $quote = $this->quoteQuery->query(Uuid::fromString($orderCommandDTO->getShippingId()));
-        $externalOrderId = $this->deliveryOrderer->order($quote->getExternalId(), $orderCommandDTO);
+        $quotes = $this->quoteQuery->query(
+            $orderCommandDTO->getStreet(),
+            $orderCommandDTO->getPostalCode(),
+            $orderCommandDTO->getCity()
+        );
 
-        $this->createOrder($quote, $externalOrderId, $orderCommandDTO);
+        foreach ($quotes as $quote) {
+            $externalOrderId = $this->deliveryOrderer->order($quote->getExternalId(), $orderCommandDTO);
+            $this->createOrder($quote, $externalOrderId, $orderCommandDTO);
+        }
     }
 
     public function createOrder(Quote $quote, string $externalOrderId, OrderCommandDTO $orderCommandDTO): void
