@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Store\Infrastructure\Query;
 
+use App\Store\Application\Exception\LocationDisabledException;
+use App\Store\Application\Exception\LocationNotFoundException;
 use App\Store\Application\Exception\StoreValidationException;
 use App\Store\Application\Provider\LocationProvider;
 use App\Store\Application\Provider\StoreProvider;
@@ -23,6 +25,8 @@ final class LocationQuery
 
     /**
      * @throws StoreValidationException
+     * @throws LocationDisabledException
+     * @throws LocationNotFoundException
      */
     public function query(
         string $shopifyDomain,
@@ -37,13 +41,17 @@ final class LocationQuery
             if (
                 $street === $location->getStreet() &&
                 $postalCode === $location->getPostalCode() &&
-                $city === $location->getCity()) {
+                $city === $location->getCity()
+            ) {
+                if (!$location->isEnabled()) {
+                    throw LocationDisabledException::locationDisabledException($location->getId());
+                }
+
                 return $location;
             }
         }
 
-        // todo create location in evermail
-        throw new \Exception('Location not found');
+        throw LocationNotFoundException::locationNotFoundException($store->getId());
     }
 
     public function queryEntityById(Uuid $id): Location

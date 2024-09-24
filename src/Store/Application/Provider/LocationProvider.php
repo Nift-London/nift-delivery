@@ -21,20 +21,6 @@ final class LocationProvider
     /**
      * @throws StoreValidationException
      */
-    public function provideLocationByShopifyDomain(string $shopifyDomain): Location
-    {
-        $store = $this->locationRepository->findByShopifyDomain($shopifyDomain);
-
-//        if (!$this->storeValidator->isStoreValid($store)) {
-//            throw StoreValidationException::storeNotFoundException();
-//        }
-
-        return $store;
-    }
-
-    /**
-     * @throws StoreValidationException
-     */
     public function provideLocationById(Uuid $id): Location
     {
         $store = $this->locationRepository->findById($id);
