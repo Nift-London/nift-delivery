@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Order;
 
+use App\Common\Util\RequestResponseLogger;
 use App\Order\Infrastructure\Command\DTO\OrderCommandDTO;
 use App\Order\Infrastructure\Command\OrderCommand;
 use App\Quote\Application\Exception\QuoteNotFoundException;
@@ -19,15 +20,19 @@ final class OrderController extends AbstractController
 {
     private OrderCommand $orderCommand;
     private OrderCommandBuilder $orderCommandBuilder;
+    private RequestResponseLogger $logger;
 
-    public function __construct(OrderCommand $orderCommand, OrderCommandBuilder $orderCommandBuilder)
+    public function __construct(OrderCommand $orderCommand, OrderCommandBuilder $orderCommandBuilder, RequestResponseLogger $logger)
     {
         $this->orderCommand = $orderCommand;
         $this->orderCommandBuilder = $orderCommandBuilder;
+        $this->logger = $logger;
     }
 
     #[Route('/api/v1/order/shopify', name: 'order', methods: ['POST'])]
     public function orderForShopify(Request $request): Response {
+        $this->logger->logRequest($request->headers->all(), $request->toArray());
+
         $orderCommand = $this->orderCommandBuilder->build(json_decode($request->getContent(), true));
 
         try {
