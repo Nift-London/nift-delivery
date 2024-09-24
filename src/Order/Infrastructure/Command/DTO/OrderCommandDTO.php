@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Order\Infrastructure\Command\DTO;
 
+use App\Quote\Domain\Enum\QuoteTypeEnum;
+
 final class OrderCommandDTO
 {
     private string $contactName;
@@ -12,6 +14,7 @@ final class OrderCommandDTO
     private string $city;
     private ?string $contactPhone;
     private ?string $contactEmail;
+    private QuoteTypeEnum $quoteTypeEnum;
 
     public function __construct(
         string $contactName,
@@ -19,7 +22,8 @@ final class OrderCommandDTO
         string $postalCode,
         string $city,
         ?string $contactPhone,
-        ?string $contactEmail
+        ?string $contactEmail,
+        QuoteTypeEnum $quoteTypeEnum
     ) {
         $this->contactName = $contactName;
         $this->street = $street;
@@ -27,6 +31,7 @@ final class OrderCommandDTO
         $this->city = $city;
         $this->contactPhone = $contactPhone;
         $this->contactEmail = $contactEmail;
+        $this->quoteTypeEnum = $quoteTypeEnum;
     }
 
     public function getContactName(): string
@@ -57,5 +62,10 @@ final class OrderCommandDTO
     public function getContactEmail(): ?string
     {
         return $this->contactEmail;
+    }
+
+    public function getQuoteTypeEnum(): QuoteTypeEnum
+    {
+        return $this->quoteTypeEnum;
     }
 }

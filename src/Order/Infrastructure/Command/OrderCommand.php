@@ -35,9 +35,19 @@ final class OrderCommand
             $orderCommandDTO->getCity()
         );
 
+        $processedLocations = [];
+
         foreach ($quotes as $quote) {
-            $externalOrderId = $this->deliveryOrderer->order($quote->getExternalId(), $orderCommandDTO);
-            $this->createOrder($quote, $externalOrderId, $orderCommandDTO);
+            if ($quote->getType() === $orderCommandDTO->getQuoteTypeEnum()) {
+                if (in_array($quote->getLocation()->getId(), $processedLocations)) {
+                    continue;
+                }
+
+                $externalOrderId = $this->deliveryOrderer->order($quote->getExternalId(), $orderCommandDTO);
+                $this->createOrder($quote, $externalOrderId, $orderCommandDTO);
+
+                $processedLocations[] = $quote->getLocation()->getId();
+            }
         }
     }
 

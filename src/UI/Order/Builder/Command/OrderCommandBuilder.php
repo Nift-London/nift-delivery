@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UI\Order\Builder\Command;
 
 use App\Order\Infrastructure\Command\DTO\OrderCommandDTO;
+use App\Quote\Domain\Enum\QuoteTypeEnum;
 
 final class OrderCommandBuilder
 {
@@ -16,6 +17,7 @@ final class OrderCommandBuilder
         $shippingPostalCode = $requestArray['shipping_address']['zip'];
         $shippingPhone = $requestArray['shipping_address']['phone'] ? (string) $requestArray['shipping_address']['phone'] : null;
         $shippingCustomerEmail = $requestArray['customer']['email'] ?? null;
+        $shippingCode = QuoteTypeEnum::from($requestArray['shipping_lines'][0]['code']);
 
         return new OrderCommandDTO(
             $shippingName,
@@ -23,7 +25,8 @@ final class OrderCommandBuilder
             $shippingPostalCode,
             $shippingCity,
             $shippingPhone,
-            $shippingCustomerEmail
+            $shippingCustomerEmail,
+            $shippingCode
         );
     }
 }
