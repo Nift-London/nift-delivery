@@ -30,7 +30,10 @@ final class QuoteRepositoryImpl extends ServiceEntityRepository implements Quote
         return $this->findBy([
             'deliveryStreet' => $street,
             'deliveryPostalCode' => $postalCode,
-            'deliveryCity' => $city
+            'deliveryCity' => $city,
+//            'createdAt' => 'NOW() - INTERVAL 10 MINUTE'
+        ], [
+            'createdAt' => 'DESC'
         ]);
     }
 }
