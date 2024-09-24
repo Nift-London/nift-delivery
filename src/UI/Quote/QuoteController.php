@@ -51,6 +51,18 @@ final class QuoteController extends AbstractController
 
         $quoteForShopifyRequest = $requestBuilder->build($request);
 
+        if ($quoteForShopifyRequest->getOrigin()->getAddress1() === null) {
+            return $this->json(['error' => 'Invalid origin address'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($quoteForShopifyRequest->getDestination()->getCity() === null) {
+            return $this->json(['error' => 'Invalid origin city'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($quoteForShopifyRequest->getDestination()->getPostalCode() === null) {
+            return $this->json(['error' => 'Invalid origin postal code'], Response::HTTP_BAD_REQUEST);
+        }
+
         try {
             $quoteQuery = $this->quoteQueryBuilder->build($quoteForShopifyRequest);
         } catch (StoreValidationException $e) {

@@ -2,20 +2,19 @@
 
 namespace App\UI\Admin;
 
+use App\Store\Domain\Entity\Location;
 use App\Store\Domain\Entity\Store;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class StoreCrudController extends AbstractCrudController
+class LocationCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Store::class;
+        return Location::class;
     }
 
     public function configureFields(string $pageName): iterable
@@ -23,11 +22,15 @@ class StoreCrudController extends AbstractCrudController
         return [
             TextField::new('name'),
             DateTimeField::new('createdAt')->setFormTypeOption('disabled','disabled')->hideWhenCreating(),
+            TextField::new('street'),
+            TextField::new('postalCode'),
+            TextField::new('city'),
             BooleanField::new('enabled'),
-            TextField::new('shopifyToken')->hideOnIndex()->setHelp('Shopify API token'),
-            TextField::new('shopifyName')->hideOnIndex()->setHelp('Shopify store name, part of the URL (e.g. "my-store" for "my-store.myshopify.com")'),
-            TextField::new('shopifyDomain')->hideOnIndex()->setHelp('Shopify store domain (e.g. "my-store.myshopify.com")'),
-            AssociationField::new('locations')
+            TextField::new('evermileLocationId')->hideOnIndex(),
+            AssociationField::new('store')
+                ->formatValue(function (?Store $val) {
+                    return $val->getName();
+                }),
         ];
     }
 }

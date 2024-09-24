@@ -4,6 +4,7 @@ namespace App\UI\Admin;
 
 use App\Order\Domain\Entity\DeliveryOrder;
 use App\Quote\Domain\Entity\Quote;
+use App\Store\Domain\Entity\Location;
 use App\Store\Domain\Entity\Store;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -26,15 +27,13 @@ class QuoteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            AssociationField::new('store')
-                ->formatValue(function (?Store $val) {
-                    return $val->getName();
+            AssociationField::new('location')
+                ->formatValue(function (Location $val) {
+                    return $val->getStore()->getName() . ' - ' . $val->getName();
                 }),
+            ChoiceField::new('type')->hideOnIndex(),
             TextField::new('externalId')->hideOnIndex(),
             DateTimeField::new('createdAt'),
-            TextField::new('pickupStreet')->hideOnIndex(),
-            TextField::new('pickupPostalCode')->hideOnIndex(),
-            TextField::new('pickupCity')->hideOnIndex(),
             TextField::new('deliveryStreet')->hideOnIndex(),
             TextField::new('deliveryPostalCode')->hideOnIndex(),
             TextField::new('deliveryCity')->hideOnIndex(),
@@ -42,7 +41,6 @@ class QuoteCrudController extends AbstractCrudController
             DateTimeField::new('pickupDateTo')->hideOnIndex(),
             DateTimeField::new('deliveryDateFrom')->hideOnIndex(),
             DateTimeField::new('deliveryDateTo'),
-            ChoiceField::new('type')->hideOnIndex(),
             MoneyField::new('price')->setCurrency('GBP'),
             AssociationField::new('deliveryOrder')
                 ->formatValue(function (?DeliveryOrder $val) {

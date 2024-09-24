@@ -6,6 +6,7 @@ namespace App\Quote\Domain\Entity;
 
 use App\Order\Domain\Entity\DeliveryOrder;
 use App\Quote\Domain\Enum\QuoteTypeEnum;
+use App\Store\Domain\Entity\Location;
 use App\Store\Domain\Entity\Store;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -16,8 +17,6 @@ class Quote
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private Uuid $id;
 
     #[ORM\Column(type: UuidType::NAME)]
@@ -34,15 +33,6 @@ class Quote
 
     #[ORM\Column(type: 'text')]
     private string $currency;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $pickupStreet;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $pickupPostalCode;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $pickupCity;
 
     #[ORM\Column(type: 'text')]
     private string $deliveryStreet;
@@ -68,15 +58,16 @@ class Quote
     #[ORM\Column(type: 'string', enumType: QuoteTypeEnum::class)]
     private QuoteTypeEnum $type;
 
-    #[ORM\ManyToOne(targetEntity: Store::class, inversedBy: 'quotes')]
+    #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'quotes')]
     #[ORM\JoinColumn(nullable: false)]
-    private Store $store;
+    private Location $location;
 
     #[ORM\OneToOne(targetEntity: DeliveryOrder::class, inversedBy: 'quote')]
     private ?DeliveryOrder $deliveryOrder;
 
     public function __construct()
     {
+        $this->id = Uuid::v6();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -189,39 +180,6 @@ class Quote
         return $this;
     }
 
-    public function getPickupStreet(): ?string
-    {
-        return $this->pickupStreet;
-    }
-
-    public function setPickupStreet(?string $pickupStreet): self
-    {
-        $this->pickupStreet = $pickupStreet;
-        return $this;
-    }
-
-    public function getPickupPostalCode(): ?string
-    {
-        return $this->pickupPostalCode;
-    }
-
-    public function setPickupPostalCode(?string $pickupPostalCode): self
-    {
-        $this->pickupPostalCode = $pickupPostalCode;
-        return $this;
-    }
-
-    public function getPickupCity(): ?string
-    {
-        return $this->pickupCity;
-    }
-
-    public function setPickupCity(?string $pickupCity): self
-    {
-        $this->pickupCity = $pickupCity;
-        return $this;
-    }
-
     public function getDeliveryStreet(): string
     {
         return $this->deliveryStreet;
@@ -274,6 +232,17 @@ class Quote
     public function setDeliveryOrder(DeliveryOrder $deliveryOrder): self
     {
         $this->deliveryOrder = $deliveryOrder;
+        return $this;
+    }
+
+    public function getLocation(): Location
+    {
+        return $this->location;
+    }
+
+    public function setLocation(Location $location): self
+    {
+        $this->location = $location;
         return $this;
     }
 }

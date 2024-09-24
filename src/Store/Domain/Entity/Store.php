@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Store\Domain\Entity;
 
-use App\Quote\Domain\Entity\Quote;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +11,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
-class Store
+class Store implements \Stringable
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -27,18 +26,6 @@ class Store
     private string $name;
 
     #[ORM\Column(type: 'text', nullable: false)]
-    private string $street;
-
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $postalCode;
-
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $city;
-
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $evermileLocationId;
-
-    #[ORM\Column(type: 'text', nullable: false)]
     private string $shopifyToken;
 
     #[ORM\Column(type: 'text', nullable: false)]
@@ -50,13 +37,14 @@ class Store
     #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
     private bool $enabled = false;
 
-    #[ORM\OneToMany(targetEntity: Quote::class, mappedBy: 'store')]
-    private Collection $quotes;
+    #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'store')]
+    /** @var Location[]|Collection */
+    private Collection $locations;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        $this->quotes = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public function getId(): Uuid
@@ -74,54 +62,34 @@ class Store
         return $this->name;
     }
 
-    public function getStreet(): string
-    {
-        return $this->street;
-    }
-
-    public function getPostalCode(): string
-    {
-        return $this->postalCode;
-    }
-
-    public function getCity(): string
-    {
-        return $this->city;
-    }
-
     public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
     }
 
-    public function setStreet(string $street): self
+    public function getStreet(): ?string
     {
-        $this->street = $street;
-        return $this;
+        return null;
+        return $this->locations->first()->getStreet();
     }
 
-    public function setPostalCode(string $postalCode): self
+    public function getPostalCode(): ?string
     {
-        $this->postalCode = $postalCode;
-        return $this;
+        return null;
+        return $this->locations->first()->getPostalCode();
     }
 
-    public function setCity(string $city): self
+    public function getCity(): ?string
     {
-        $this->city = $city;
-        return $this;
+        return null;
+        return $this->locations->first()->getCity();
     }
 
-    public function getEvermileLocationId(): string
+    public function getEvermileLocationId(): ?string
     {
-        return $this->evermileLocationId;
-    }
-
-    public function setEvermileLocationId(string $evermileLocationId): self
-    {
-        $this->evermileLocationId = $evermileLocationId;
-        return $this;
+        return null;
+        return $this->locations->first()->getEvermileLocationId();
     }
 
     public function getShopifyToken(): string
@@ -168,9 +136,13 @@ class Store
         return $this;
     }
 
-    /** @return Quote[]|Collection */
-    public function getQuotes(): Collection
+    public function getLocations(): Collection
     {
-        return $this->quotes;
+        return $this->locations;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }

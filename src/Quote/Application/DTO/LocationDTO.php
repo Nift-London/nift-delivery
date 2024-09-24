@@ -6,7 +6,7 @@ namespace App\Quote\Application\DTO;
 
 use Symfony\Component\Uid\Uuid;
 
-final class StoreDTO
+final class LocationDTO
 {
     private string $evermileLocationId;
     private Uuid $id;

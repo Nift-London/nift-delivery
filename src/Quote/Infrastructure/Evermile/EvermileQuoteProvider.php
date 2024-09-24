@@ -8,34 +8,39 @@ use App\Common\Evermile\Client\EvermileClient;
 use App\Quote\Application\DTO\AddressDTO;
 use App\Quote\Application\DTO\ItemDTO;
 use App\Quote\Application\DTO\QuoteDTO;
-use App\Quote\Application\DTO\StoreDTO;
+use App\Quote\Application\DTO\LocationDTO;
 use App\Quote\Domain\Enum\QuoteTypeEnum;
 use App\Quote\Infrastructure\Evermile\Builder\EvermileQuoteRequestBuilder;
+use Psr\Log\LoggerInterface;
 
 final class EvermileQuoteProvider
 {
     private EvermileClient $evermileClient;
     private EvermileQuoteRequestBuilder $evermileQuoteRequestBuilder;
+    private LoggerInterface $logger;
 
-    public function __construct(EvermileClient $evermileClient, EvermileQuoteRequestBuilder $evermileQuoteRequestBuilder)
-    {
+    public function __construct(
+        EvermileClient $evermileClient,
+        EvermileQuoteRequestBuilder $evermileQuoteRequestBuilder,
+        LoggerInterface $logger
+    ) {
         $this->evermileClient = $evermileClient;
         $this->evermileQuoteRequestBuilder = $evermileQuoteRequestBuilder;
+        $this->logger = $logger;
     }
 
-    // todo in future handle $addressFrom as priority, for now $store->evermileLocationId is enough
     /**
      * @param ItemDTO[] $items
      * @return QuoteDTO[]
      */
-    public function provide(?AddressDTO $addressFrom, AddressDTO $addressTo, StoreDTO $store, array $items): array
+    public function provide(AddressDTO $addressTo, LocationDTO $store, array $items): array
     {
         $quotes = [];
 
         try {
             $response = $this->evermileClient->getQuote($this->evermileQuoteRequestBuilder->build($addressTo, $store, $items));
         } catch (\Exception $e) {
-            // todo log exception
+            $this->logger->error('Error while getting quotes from Evermile', ['error' => $e->getMessage()]);
             return $quotes;
         }
 

@@ -6,12 +6,12 @@ namespace App\Quote\Infrastructure\Evermile\Builder;
 
 use App\Quote\Application\DTO\AddressDTO;
 use App\Quote\Application\DTO\ItemDTO;
-use App\Quote\Application\DTO\StoreDTO;
+use App\Quote\Application\DTO\LocationDTO;
 
 final class EvermileQuoteRequestBuilder
 {
     /** @param ItemDTO[] $items */
-    public function build(AddressDTO $address, StoreDTO $store, array $items): array
+    public function build(AddressDTO $address, LocationDTO $location, array $items): array
     {
         $itemList = [];
         $itemsWeightKg = 0;
@@ -36,7 +36,7 @@ final class EvermileQuoteRequestBuilder
             'pickup_info' => [
                 'pickupLocations' => [
                     [
-                        'locationId' => $store->getEvermileLocationId(),
+                        'locationId' => $location->getEvermileLocationId(),
                     ]
                 ]
             ],
