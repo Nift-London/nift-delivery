@@ -25,7 +25,7 @@ class DeliveryOrderCrudController extends AbstractCrudController
         return [
             AssociationField::new('quote')
                 ->formatValue(function (Quote $val) {
-                    return $val->getStore()->getName() . '#' . substr($val->getId(), -12);
+                    return $val->getLocation()->getStore()->getName() . '#' . substr($val->getId(), -12);
                 }),
             IdField::new('externalId')->hideOnIndex(),
             DateTimeField::new('createdAt'),

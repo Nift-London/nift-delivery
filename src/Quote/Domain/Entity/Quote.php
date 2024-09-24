@@ -169,17 +169,6 @@ class Quote
         return $this;
     }
 
-    public function getStore(): Store
-    {
-        return $this->store;
-    }
-
-    public function setStore(Store $store): self
-    {
-        $this->store = $store;
-        return $this;
-    }
-
     public function getDeliveryStreet(): string
     {
         return $this->deliveryStreet;
