@@ -61,8 +61,7 @@ final class EvermileQuoteProvider
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getStart()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getEnd()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getStart()),
-                    \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getEnd()),
-                    QuoteTypeEnum::EVERMILE
+                    \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getEnd())
                 );
             }
 

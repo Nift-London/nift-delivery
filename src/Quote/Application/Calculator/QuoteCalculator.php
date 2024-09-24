@@ -6,6 +6,7 @@ namespace App\Quote\Application\Calculator;
 
 use App\Quote\Application\DTO\ProposalQuotesDTO;
 use App\Quote\Application\DTO\QuoteDTO;
+use App\Quote\Domain\Enum\QuoteTypeEnum;
 
 // This will be strategy in future to calculate cheapest/fastest quotes
 final class QuoteCalculator
@@ -40,6 +41,7 @@ final class QuoteCalculator
         $firstQuote = $quotes[0];
 
         if ($firstQuote->getDeliveryDateTo()->format('Ymd') == $today->format('Ymd')) {
+            $firstQuote->setType(QuoteTypeEnum::EVERMILE_TODAY);
             return $firstQuote;
         }
 
@@ -51,6 +53,7 @@ final class QuoteCalculator
     {
         foreach ($quotes as $quote) {
             if ($quote->getName() === 'evening') {
+                $quote->setType(QuoteTypeEnum::EVERMILE_TONIGHT);
                 return $quote;
             }
         }
@@ -65,6 +68,7 @@ final class QuoteCalculator
 
         foreach ($quotes as $quote) {
             if ($quote->getDeliveryDateTo()->format('Ymd') != $today->format('Ymd')) {
+                $quote->setType(QuoteTypeEnum::EVERMILE_TOMORROW);
                 return $quote;
             }
         }
