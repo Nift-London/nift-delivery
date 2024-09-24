@@ -28,9 +28,9 @@ final class QuoteRepositoryImpl extends ServiceEntityRepository implements Quote
         // todo set max to 10 mins
 
         return $this->findBy([
-            'delivery_street' => $street,
-            'delivery_postal_code' => $postalCode,
-            'delivery_city' => $city
+            'deliveryStreet' => $street,
+            'deliveryPostalCode' => $postalCode,
+            'deliveryCity' => $city
         ]);
     }
 }
