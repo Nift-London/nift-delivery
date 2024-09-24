@@ -16,12 +16,24 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
         mappings:
-            App:
+            App\Store:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+                dir: '%kernel.project_dir%/src/Store/Domain/Entity'
+                prefix: 'App\Store\Domain\Entity'
+                alias: App\Store
+            App\Quote:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Quote/Domain/Entity'
+                prefix: 'App\Quote\Domain\Entity'
+                alias: App\Quote
+            App\Order:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Order/Domain/Entity'
+                prefix: 'App\Order\Domain\Entity'
+                alias: App\Order
 
 when@test:
     doctrine:
