@@ -21,4 +21,9 @@ final class DeliveryOrderRepositoryImpl extends ServiceEntityRepository implemen
         $this->getEntityManager()->persist($order);
         $this->getEntityManager()->flush();
     }
+
+    public function findByExternalPurchaseId(string $externalPurchaseId): ?DeliveryOrder
+    {
+        return $this->findOneBy(['externalPurchaseId' => $externalPurchaseId]);
+    }
 }

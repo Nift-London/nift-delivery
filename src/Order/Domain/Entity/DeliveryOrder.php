@@ -19,7 +19,10 @@ class DeliveryOrder
     private Uuid $id;
 
     #[ORM\Column(type: 'text')]
-    private string $externalId;
+    private string $externalDeliveryId;
+
+    #[ORM\Column(type: 'text')]
+    private string $externalPurchaseId;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $shipmentRecipientName;
@@ -36,12 +39,13 @@ class DeliveryOrder
     #[ORM\OneToOne(targetEntity: Quote::class, mappedBy: 'deliveryOrder')]
     private Quote $quote;
 
-    public function __construct(Quote $quote, string $externalId)
+    public function __construct(Quote $quote, string $externalDeliveryId, string $externalPurchaseId)
     {
         $this->createdAt = new \DateTimeImmutable();
         $quote->setDeliveryOrder($this);
         $this->quote = $quote;
-        $this->externalId = $externalId;
+        $this->externalDeliveryId = $externalDeliveryId;
+        $this->externalPurchaseId = $externalPurchaseId;
     }
 
     public function getId(): Uuid
@@ -54,9 +58,9 @@ class DeliveryOrder
         return $this->createdAt;
     }
 
-    public function getExternalId(): string
+    public function getExternalDeliveryId(): string
     {
-        return $this->externalId;
+        return $this->externalDeliveryId;
     }
 
     public function getQuote(): Quote
@@ -95,5 +99,10 @@ class DeliveryOrder
     {
         $this->shipmentContactEmail = $shipmentContactEmail;
         return $this;
+    }
+
+    public function getExternalPurchaseId(): string
+    {
+        return $this->externalPurchaseId;
     }
 }

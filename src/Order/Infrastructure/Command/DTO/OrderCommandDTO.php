@@ -15,6 +15,7 @@ final class OrderCommandDTO
     private ?string $contactPhone;
     private ?string $contactEmail;
     private QuoteTypeEnum $quoteTypeEnum;
+    private string $externalPurchaseId;
 
     public function __construct(
         string $contactName,
@@ -23,7 +24,8 @@ final class OrderCommandDTO
         string $city,
         ?string $contactPhone,
         ?string $contactEmail,
-        QuoteTypeEnum $quoteTypeEnum
+        QuoteTypeEnum $quoteTypeEnum,
+        string $externalPurchaseId
     ) {
         $this->contactName = $contactName;
         $this->street = $street;
@@ -32,6 +34,7 @@ final class OrderCommandDTO
         $this->contactPhone = $contactPhone;
         $this->contactEmail = $contactEmail;
         $this->quoteTypeEnum = $quoteTypeEnum;
+        $this->externalPurchaseId = $externalPurchaseId;
     }
 
     public function getContactName(): string
@@ -67,5 +70,10 @@ final class OrderCommandDTO
     public function getQuoteTypeEnum(): QuoteTypeEnum
     {
         return $this->quoteTypeEnum;
+    }
+
+    public function getExternalPurchaseId(): string
+    {
+        return $this->externalPurchaseId;
     }
 }
