@@ -18,7 +18,7 @@ final class OrderCommandBuilder
         $shippingPhone = $requestArray['shipping_address']['phone'] ? (string) $requestArray['shipping_address']['phone'] : null;
         $shippingCustomerEmail = $requestArray['customer']['email'] ?? null;
         $shippingCode = QuoteTypeEnum::from($requestArray['shipping_lines'][0]['code']);
-        $externalPurchaseId = $requestArray['id'];
+        $externalPurchaseId = (string) $requestArray['id'];
 
         return new OrderCommandDTO(
             $shippingName,

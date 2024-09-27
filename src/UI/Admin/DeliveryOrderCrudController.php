@@ -27,7 +27,8 @@ class DeliveryOrderCrudController extends AbstractCrudController
                 ->formatValue(function (Quote $val) {
                     return $val->getLocation()->getStore()->getName() . '#' . substr($val->getId(), -12);
                 }),
-            IdField::new('externalId')->hideOnIndex(),
+            IdField::new('externalDeliveryId')->hideOnIndex(),
+            IdField::new('externalPurchaseId')->hideOnIndex(),
             DateTimeField::new('createdAt'),
             TextField::new('shipmentRecipientName'),
             TextField::new('shipmentContactPhone'),
