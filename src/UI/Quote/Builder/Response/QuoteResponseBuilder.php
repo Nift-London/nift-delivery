@@ -22,7 +22,7 @@ final class QuoteResponseBuilder
             $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Tonight',
                 $proposalQuotesDTO->getEveningToday()->getType()->value,
-                1499,
+                $proposalQuotesDTO->getEveningToday()->getCustomerPrice(),
                 'Evening delivery option. Estimated today delivery time: ' . $proposalQuotesDTO->getEveningToday()->getDeliveryDateTo()->format('H:i'),
                 $proposalQuotesDTO->getEveningToday()->getCurrency()
             );
@@ -32,8 +32,8 @@ final class QuoteResponseBuilder
             $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Today',
                 $proposalQuotesDTO->getFastestToday()->getType()->value,
-                999,
-                'Fastest delivery option. Estimated today delivery time: ' . $proposalQuotesDTO->getFastestToday()->getDeliveryDateTo()->format('H:i'),
+                $proposalQuotesDTO->getFastestToday()->getCustomerPrice(),
+                'Today delivery option. Estimated today delivery time: ' . $proposalQuotesDTO->getFastestToday()->getDeliveryDateTo()->format('H:i'),
                 $proposalQuotesDTO->getFastestToday()->getCurrency()
             );
         }
@@ -42,7 +42,7 @@ final class QuoteResponseBuilder
             $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Tomorrow',
                 $proposalQuotesDTO->getLatest()->getType()->value,
-                599,
+                $proposalQuotesDTO->getLatest()->getCustomerPrice(),
                 'Normal delivery option. Estimated delivery time: ' . $proposalQuotesDTO->getLatest()->getDeliveryDateTo()->format('Y/m/d H:i'),
                 $proposalQuotesDTO->getLatest()->getCurrency()
             );

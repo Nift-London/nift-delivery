@@ -11,8 +11,7 @@ use App\Quote\Domain\Enum\QuoteTypeEnum;
 // This will be strategy in future to calculate cheapest/fastest quotes
 final class QuoteCalculator
 {
-    /** @param QuoteDTO[] $quotes */
-    public function calculate(array $quotes): ProposalQuotesDTO
+    public function calculate(array $quotes, array $typePriceTable): ProposalQuotesDTO
     {
         if (empty($quotes)) {
             return ProposalQuotesDTO::ofNoAvailableRates();
@@ -20,7 +19,11 @@ final class QuoteCalculator
 
         $this->sortQuotes($quotes);
 
-        return new ProposalQuotesDTO($this->getTodayFastest($quotes), $this->getTodayEvening($quotes), $this->getLatest($quotes));
+        return new ProposalQuotesDTO(
+            $this->getTodayCheapest($quotes, $typePriceTable),
+            $this->getTodayEvening($quotes, $typePriceTable),
+            $this->getLatest($quotes, $typePriceTable)
+        );
     }
 
     private function sortQuotes(array &$quotes): void
@@ -31,29 +34,42 @@ final class QuoteCalculator
     }
 
     /** @param QuoteDTO[] $quotes */
-    private function getTodayFastest(array $quotes): ?QuoteDTO
+    private function getTodayCheapest(array $quotes, array $typePriceTable): ?QuoteDTO
     {
-        if (!isset($quotes[0])) {
+        if (!isset($quotes[0]) || !array_key_exists(QuoteTypeEnum::EVERMILE_TODAY->value, $typePriceTable)) {
             return null;
         }
 
         $today = new \DateTimeImmutable();
-        $firstQuote = $quotes[0];
+        $cheapestQuote = null;
 
-        if ($firstQuote->getDeliveryDateTo()->format('Ymd') == $today->format('Ymd')) {
-            $firstQuote->setType(QuoteTypeEnum::EVERMILE_TODAY);
-            return $firstQuote;
+        foreach ($quotes as $quote) {
+            if ($quote->getDeliveryDateTo()->format('Ymd') == $today->format('Ymd') && $quote->getName() != 'evening') {
+                if (is_null($cheapestQuote) || $quote->getPrice() < $cheapestQuote->getPrice()) {
+                    $cheapestQuote = $quote;
+                }
+            }
         }
 
-        return null;
+        if (!is_null($cheapestQuote)) {
+            $cheapestQuote->setType(QuoteTypeEnum::EVERMILE_TODAY);
+            $cheapestQuote->setCustomerPrice($typePriceTable[QuoteTypeEnum::EVERMILE_TODAY->value]);
+        }
+
+        return $cheapestQuote;
     }
 
     /** @param QuoteDTO[] $quotes */
-    private function getTodayEvening(array $quotes): ?QuoteDTO
+    private function getTodayEvening(array $quotes, array $typePriceTable): ?QuoteDTO
     {
+        if (!array_key_exists(QuoteTypeEnum::EVERMILE_TONIGHT->value, $typePriceTable)) {
+            return null;
+        }
+
         foreach ($quotes as $quote) {
             if ($quote->getName() === 'evening') {
                 $quote->setType(QuoteTypeEnum::EVERMILE_TONIGHT);
+                $quote->setCustomerPrice($typePriceTable[QuoteTypeEnum::EVERMILE_TONIGHT->value]);
                 return $quote;
             }
         }
@@ -62,17 +78,33 @@ final class QuoteCalculator
     }
 
     /** @param QuoteDTO[] $quotes */
-    private function getLatest(array $quotes): ?QuoteDTO
+    private function getLatest(array $quotes, array $typePriceTable): ?QuoteDTO
     {
-        $today = new \DateTimeImmutable();
+        if (!array_key_exists(QuoteTypeEnum::EVERMILE_TOMORROW->value, $typePriceTable)) {
+            return null;
+        }
 
+        $today = new \DateTimeImmutable();
+        $cheapestQuote = null;
+        $chosenDate = null;
+
+        // todo change for cheapest available
         foreach ($quotes as $quote) {
             if ($quote->getDeliveryDateTo()->format('Ymd') != $today->format('Ymd')) {
-                $quote->setType(QuoteTypeEnum::EVERMILE_TOMORROW);
-                return $quote;
+                if (is_null($cheapestQuote) || $quote->getPrice() < $cheapestQuote->getPrice()) {
+                    if (is_null($chosenDate) || $quote->getDeliveryDateTo()->format('Ymd') === $chosenDate) {
+                        $cheapestQuote = $quote;
+                        $chosenDate = $quote->getDeliveryDateTo()->format('Ymd');
+                    }
+                }
             }
         }
 
-        return null;
+        if (!is_null($cheapestQuote)) {
+            $cheapestQuote->setType(QuoteTypeEnum::EVERMILE_TOMORROW);
+            $cheapestQuote->setCustomerPrice($typePriceTable[QuoteTypeEnum::EVERMILE_TOMORROW->value]);
+        }
+
+        return $cheapestQuote;
     }
 }

@@ -37,7 +37,11 @@ final class QuoteQueryBuilder
         $location = $this->getLocation($quoteForShopifyRequest, $originAddress);
 
         $addressTo = $this->getAddress($destinationAddress);
-        $locationDTO = new LocationDTO($location->getId(), $location->getEvermileLocationId());
+        $locationDTO = new LocationDTO(
+            $location->getId(),
+            $location->getEvermileLocationId(),
+            $location->getEnabledTypesWithPrices()
+        );
         $items = $this->getItems($quoteForShopifyRequest);
 
         return new QuoteQueryDTO($addressTo, $locationDTO, $items);

@@ -4,6 +4,7 @@ namespace App\UI\Admin;
 
 use App\Order\Domain\Entity\DeliveryOrder;
 use App\Quote\Domain\Entity\Quote;
+use App\Quote\Domain\Enum\QuoteTypeEnum;
 use App\Store\Domain\Entity\Location;
 use App\Store\Domain\Entity\Store;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -34,6 +35,9 @@ class QuoteCrudController extends AbstractCrudController
             ChoiceField::new('type')->hideOnIndex(),
             TextField::new('externalId')->hideOnIndex(),
             DateTimeField::new('createdAt'),
+            ChoiceField::new('type')->formatValue(function (QuoteTypeEnum $val) {
+                return $val->value;
+            }),
             TextField::new('deliveryStreet')->hideOnIndex(),
             TextField::new('deliveryPostalCode')->hideOnIndex(),
             TextField::new('deliveryCity')->hideOnIndex(),

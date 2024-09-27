@@ -14,6 +14,7 @@ final class QuoteDTO
     private string $code;
     private string $description;
     private int $price;
+    private int $customerPrice;
     private string $currency;
     private \DateTimeImmutable $pickupDateFrom;
     private \DateTimeImmutable $pickupDateTo;
@@ -115,5 +116,16 @@ final class QuoteDTO
     {
         $this->type = $type;
         return $this;
+    }
+
+    public function setCustomerPrice(int $customerPrice): QuoteDTO
+    {
+        $this->customerPrice = $customerPrice;
+        return $this;
+    }
+
+    public function getCustomerPrice(): int
+    {
+        return $this->customerPrice;
     }
 }

@@ -35,7 +35,7 @@ final class ProposalQuoteQuery
             $query->getItems()
         );
 
-        $calculatedQuotes = $this->quoteCalculator->calculate($quotes);
+        $calculatedQuotes = $this->quoteCalculator->calculate($quotes, $query->getLocationDTO()->getEnabledTypesWithPrices());
         $this->quoteSaver->save($calculatedQuotes, $query->getLocationDTO()->getId(), $query->getAddressTo());
 
         return $calculatedQuotes;
