@@ -26,6 +26,7 @@ final class QuoteCalculator
         );
     }
 
+
     private function sortQuotes(array &$quotes): void
     {
         usort($quotes, function (QuoteDTO $a, QuoteDTO $b) {
