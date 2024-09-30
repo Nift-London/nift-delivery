@@ -24,6 +24,9 @@ class StoreCrudController extends AbstractCrudController
             TextField::new('name'),
             DateTimeField::new('createdAt')->setFormTypeOption('disabled','disabled')->hideWhenCreating(),
             BooleanField::new('enabled'),
+            TextField::new('shopifyClientId')->hideOnIndex()->setHelp('Shopify API token'),
+            TextField::new('shopifyClientSecret')->hideOnIndex()->setHelp('Shopify API token'),
+            TextField::new('shopifyAuthCode')->hideOnIndex()->setHelp('Shopify API token'),
             TextField::new('shopifyToken')->hideOnIndex()->setHelp('Shopify API token'),
             TextField::new('shopifyName')->hideOnIndex()->setHelp('Shopify store name, part of the URL (e.g. "my-store" for "my-store.myshopify.com")'),
             TextField::new('shopifyDomain')->hideOnIndex()->setHelp('Shopify store domain (e.g. "my-store.myshopify.com")'),
@@ -31,3 +34,4 @@ class StoreCrudController extends AbstractCrudController
         ];
     }
 }
+//

@@ -6,11 +6,9 @@ namespace App\Common\Evermile\Client;
 
 use App\Common\Util\EvermileRequestResponseLogger;
 use GuzzleHttp\Client;
-use OpenAPI\Client\Api\LocationsApi;
 use OpenAPI\Client\Api\OrdersApi;
 use OpenAPI\Client\Api\PickupLocationsApi;
 use OpenAPI\Client\Api\QuotesApi;
-use OpenAPI\Client\ApiException;
 use OpenAPI\Client\Configuration;
 use OpenAPI\Client\Model\LocationPut200Response;
 use OpenAPI\Client\Model\LocationPutRequest;
