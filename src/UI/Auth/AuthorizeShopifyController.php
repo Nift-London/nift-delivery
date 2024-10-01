@@ -18,11 +18,13 @@ final class AuthorizeShopifyController extends AbstractController
 {
     private RequestResponseLogger $logger;
     private StoreRepository $storeRepository;
+    private string $appUrl;
 
-    public function __construct(RequestResponseLogger $logger, StoreRepository $storeRepository)
+    public function __construct(RequestResponseLogger $logger, StoreRepository $storeRepository, string $appUrl)
     {
         $this->logger = $logger;
         $this->storeRepository = $storeRepository;
+        $this->appUrl = $appUrl;
     }
 
     #[Route(path: '/shopify', name: 'shopify', methods: ['GET'])]
@@ -45,17 +47,12 @@ final class AuthorizeShopifyController extends AbstractController
 
         $redirectUrl = 'https://' . $shop . '/admin/oauth/authorize?client_id=' . $store->getShopifyClientId()
             . '&scope=' . 'read_orders,read_checkouts,read_customers,write_shipping,read_shipping,write_returns,read_returns,write_delivery_customizations,write_delivery_option_generators,read_delivery_option_generators,write_delivery_customizations,read_delivery_customizations'
-            . '&redirect_uri=' . 'https://b717-83-8-251-107.ngrok-free.app/shopify/auth'
+            . '&redirect_uri=' . $this->appUrl . '/shopify/auth'
             . '&state=' . $store->getId()->jsonSerialize();
 
         $this->logger->logRedirect($redirectUrl);
 
-        return $this->redirect(
-            'https://' . $shop . '/admin/oauth/authorize?client_id=' . $store->getShopifyClientId()
-            . '&scope=' . 'read_orders,read_checkouts,read_customers,write_shipping,read_shipping,write_returns,read_returns,write_delivery_customizations,write_delivery_option_generators,read_delivery_option_generators,write_delivery_customizations,read_delivery_customizations'
-            . '&redirect_uri=' . 'https://b717-83-8-251-107.ngrok-free.app/shopify/auth'
-            . '&state=' . $store->getId()->jsonSerialize()
-        );
+        return $this->redirect($redirectUrl);
     }
 
     #[Route(path: '/shopify/auth', name: 'auth_shopify', methods: ['GET'])]
