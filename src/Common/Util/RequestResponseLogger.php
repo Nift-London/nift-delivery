@@ -30,4 +30,11 @@ class RequestResponseLogger
             '[DELIVERY_APP] Request headers: ' . json_encode($requestHeaders) . ' Request: ' . json_encode($request)
         );
     }
+
+    public function logRedirect(string $redirectUrl): void
+    {
+        $this->logger->info(
+            '[DELIVERY_APP] Redirecting to: ' . $redirectUrl
+        );
+    }
 }

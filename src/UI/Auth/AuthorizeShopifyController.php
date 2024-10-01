@@ -43,6 +43,13 @@ final class AuthorizeShopifyController extends AbstractController
             return $this->json(['error' => 'Store not found'], 404);
         }
 
+        $redirectUrl = 'https://' . $shop . '/admin/oauth/authorize?client_id=' . $store->getShopifyClientId()
+            . '&scope=' . 'read_orders,read_checkouts,read_customers,write_shipping,read_shipping,write_returns,read_returns,write_delivery_customizations,write_delivery_option_generators,read_delivery_option_generators,write_delivery_customizations,read_delivery_customizations'
+            . '&redirect_uri=' . 'https://b717-83-8-251-107.ngrok-free.app/shopify/auth'
+            . '&state=' . $store->getId()->jsonSerialize();
+
+        $this->logger->logRedirect($redirectUrl);
+
         return $this->redirect(
             'https://' . $shop . '/admin/oauth/authorize?client_id=' . $store->getShopifyClientId()
             . '&scope=' . 'read_orders,read_checkouts,read_customers,write_shipping,read_shipping,write_returns,read_returns,write_delivery_customizations,write_delivery_option_generators,read_delivery_option_generators,write_delivery_customizations,read_delivery_customizations'
