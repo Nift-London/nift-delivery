@@ -45,7 +45,7 @@ final class AuthorizeShopifyController extends AbstractController
 
         return $this->redirect(
             'https://' . $shop . '/admin/oauth/authorize?client_id=' . $store->getShopifyClientId()
-            . '&scope=' . 'read_checkouts,read_customers,write_shipping,read_shipping,write_returns,read_returns,write_delivery_customizations,write_delivery_option_generators,read_delivery_option_generators,write_delivery_customizations,read_delivery_customizations'
+            . '&scope=' . 'read_orders,read_checkouts,read_customers,write_shipping,read_shipping,write_returns,read_returns,write_delivery_customizations,write_delivery_option_generators,read_delivery_option_generators,write_delivery_customizations,read_delivery_customizations'
             . '&redirect_uri=' . 'https://b717-83-8-251-107.ngrok-free.app/shopify/auth'
             . '&state=' . $store->getId()->jsonSerialize()
         );
@@ -72,7 +72,6 @@ final class AuthorizeShopifyController extends AbstractController
         $store->setShopifyAuthCode($code);
 
         try {
-
             $client = new \GuzzleHttp\Client();
             $response = $client->request('POST', 'https://' . $store->getShopifyDomain() . '/admin/oauth/access_token', [
                 'form_params' => [
@@ -86,7 +85,6 @@ final class AuthorizeShopifyController extends AbstractController
         } catch (ClientException $e) {
             echo($e->getResponse()->getBody()->getContents());die;
         }
-
 
         $this->storeRepository->save($store);
 

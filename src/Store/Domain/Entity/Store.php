@@ -44,6 +44,12 @@ class Store implements \Stringable
     #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
     private bool $enabled = false;
 
+    #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
+    private bool $shopifyWebhooksConfigured = false;
+
+    #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
+    private bool $shopifyCarrierServiceConfigured = false;
+
     #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'store')]
     /** @var Location[]|Collection */
     private Collection $locations;
@@ -161,5 +167,27 @@ class Store implements \Stringable
     public function __toString(): string
     {
         return $this->getName();
+    }
+
+    public function isShopifyWebhooksConfigured(): bool
+    {
+        return $this->shopifyWebhooksConfigured;
+    }
+
+    public function setShopifyWebhooksConfigured(bool $shopifyWebhooksConfigured): self
+    {
+        $this->shopifyWebhooksConfigured = $shopifyWebhooksConfigured;
+        return $this;
+    }
+
+    public function isShopifyCarrierServiceConfigured(): bool
+    {
+        return $this->shopifyCarrierServiceConfigured;
+    }
+
+    public function setShopifyCarrierServiceConfigured(bool $shopifyCarrierServiceConfigured): self
+    {
+        $this->shopifyCarrierServiceConfigured = $shopifyCarrierServiceConfigured;
+        return $this;
     }
 }
