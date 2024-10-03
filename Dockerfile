@@ -17,7 +17,7 @@ RUN composer install                \
 
 
 #################### PHP IMAGE ####################
-FROM php:8-fpm as backend
+FROM php:8-fpm AS backend
 
 WORKDIR /var/www/html/
 
@@ -58,7 +58,7 @@ COPY .infrastructure/configurations/php/entrypoint.sh entrypoint.sh
 CMD ["bash","entrypoint.sh"]
 
 #################### NGINX IMAGE ####################
-FROM nginx:latest as nginx
+FROM nginx:latest AS nginx
 
 COPY .infrastructure/configurations/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY .infrastructure/configurations/nginx/production.conf /etc/nginx/conf.d/production.conf
