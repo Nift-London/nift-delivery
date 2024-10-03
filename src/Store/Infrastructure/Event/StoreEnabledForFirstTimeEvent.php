@@ -36,8 +36,6 @@ final class StoreEnabledForFirstTimeEvent implements EventSubscriberInterface
             return;
         }
 
-        // todo subscribe to shopify webhook order/create
-
         $client = new \GuzzleHttp\Client();
 
         try {

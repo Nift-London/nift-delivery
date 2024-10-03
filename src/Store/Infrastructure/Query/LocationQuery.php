@@ -10,6 +10,7 @@ use App\Store\Application\Exception\StoreValidationException;
 use App\Store\Application\Provider\LocationProvider;
 use App\Store\Application\Provider\StoreProvider;
 use App\Store\Domain\Entity\Location;
+use App\Store\Domain\Entity\Store;
 use Symfony\Component\Uid\Uuid;
 
 final class LocationQuery
@@ -44,6 +45,35 @@ final class LocationQuery
                 $city === $location->getCity()
             ) {
                 if (!$location->isEnabled()) {
+                    throw LocationDisabledException::locationDisabledException($location->getId());
+                }
+
+                return $location;
+            }
+        }
+
+        throw LocationNotFoundException::locationNotFoundException($store->getId());
+    }
+
+    /**
+     * @throws LocationDisabledException
+     * @throws LocationNotFoundException
+     */
+    public function queryByStore(
+        Store $store,
+        string $street,
+        string $postalCode,
+        string $city,
+        bool $includeExcluded = false
+    ): Location {
+        /** @var Location $location */
+        foreach ($store->getLocations() as $location) {
+            if (
+                $street === $location->getStreet() &&
+                $postalCode === $location->getPostalCode() &&
+                $city === $location->getCity()
+            ) {
+                if (!$location->isEnabled() && !$includeExcluded) {
                     throw LocationDisabledException::locationDisabledException($location->getId());
                 }
 

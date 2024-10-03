@@ -37,6 +37,9 @@ class Location implements \Stringable
     #[ORM\Column(type: 'text', nullable: false)]
     private string $evermileLocationId;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shopifyId;
+
     #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
     private bool $enabled = false;
 
@@ -138,6 +141,17 @@ class Location implements \Stringable
     public function setEvermileLocationId(string $evermileLocationId): self
     {
         $this->evermileLocationId = $evermileLocationId;
+        return $this;
+    }
+
+    public function getShopifyId(): ?string
+    {
+        return $this->shopifyId;
+    }
+
+    public function setShopifyId(string $shopifyId): self
+    {
+        $this->shopifyId = $shopifyId;
         return $this;
     }
 

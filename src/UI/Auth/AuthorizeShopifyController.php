@@ -46,7 +46,7 @@ final class AuthorizeShopifyController extends AbstractController
         }
 
         $redirectUrl = 'https://' . $shop . '/admin/oauth/authorize?client_id=' . $store->getShopifyClientId()
-            . '&scope=' . 'read_orders,read_checkouts,read_customers,write_shipping,read_shipping,write_returns,read_returns,write_delivery_customizations,write_delivery_option_generators,read_delivery_option_generators,write_delivery_customizations,read_delivery_customizations'
+            . '&scope=' . 'read_locations,read_orders,read_checkouts,read_customers,write_shipping,read_shipping,write_returns,read_returns,write_delivery_customizations,write_delivery_option_generators,read_delivery_option_generators,write_delivery_customizations,read_delivery_customizations'
             . '&redirect_uri=' . $this->appUrl . '/shopify/auth'
             . '&state=' . $store->getId()->jsonSerialize();
 

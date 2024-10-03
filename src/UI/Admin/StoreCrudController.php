@@ -3,6 +3,11 @@
 namespace App\UI\Admin;
 
 use App\Store\Domain\Entity\Store;
+use App\Store\Infrastructure\Command\SyncLocationsCommand;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -10,9 +15,27 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class StoreCrudController extends AbstractCrudController
 {
+    private SyncLocationsCommand $syncLocationsCommand;
+
+    public function __construct(SyncLocationsCommand $syncLocationsCommand)
+    {
+        $this->syncLocationsCommand = $syncLocationsCommand;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $syncLocations = Action::new('syncLocations', 'Sync Locations', 'fa fa-file-invoice')
+            ->linkToCrudAction('syncLocations');
+
+        return $actions
+            ->add(Crud::PAGE_EDIT, $syncLocations)
+            ->add(Crud::PAGE_DETAIL, $syncLocations);
+    }
+
     public static function getEntityFqcn(): string
     {
         return Store::class;
@@ -33,5 +56,16 @@ class StoreCrudController extends AbstractCrudController
             AssociationField::new('locations')
         ];
     }
+
+    public function syncLocations(AdminContext $context)
+    {
+        /** @var Store $store */
+        $store = $context->getEntity()->getInstance();
+        $this->syncLocationsCommand->sync($store);
+
+        return $this->redirect($this->container->get(AdminUrlGenerator::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($store->getId())
+            ->generateUrl());
+    }
 }
-//
