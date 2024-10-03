@@ -31,8 +31,8 @@ module "deployment" {
     build_timeout      = "300"
     compute_type       = "BUILD_GENERAL1_SMALL"
     encrypted_artifact = true
-    image              = "aws/codebuild/amazonlinux2-x86_64-standard:4.0"
-    terraform_version  = "1.3.1"
+    image              = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
+    terraform_version  = "1.9.7"
   }
   custom_build_spec = data.local_file.docker_build_buildspec.content
   application_name  = var.application_name
