@@ -1,4 +1,5 @@
 set -e
+php bin/composer.phar install
 php bin/console d:m:m
 php bin/console ca:cl
 php bin/console ca:wa
