@@ -15,3 +15,9 @@ controllersQuote:
         path: ../src/UI/Quote
         namespace: App\UI\Quote
     type: attribute
+
+controllersAuth:
+    resource:
+        path: ../src/UI/Auth
+        namespace: App\UI\Auth
+    type: attribute

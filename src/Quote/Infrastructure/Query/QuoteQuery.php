@@ -18,14 +18,18 @@ final class QuoteQuery
         $this->quoteRepository = $quoteRepository;
     }
 
-    public function query(Uuid $id): Quote
+    /**
+     * @throws QuoteNotFoundException
+     * @return Quote[]
+     */
+    public function query(string $street, string $postalCode, string $city): array
     {
-        $quote = $this->quoteRepository->findById($id);
+        $quote = $this->quoteRepository->findByStreetPostalCodeCity($street, $postalCode, $city);
 
-        if (is_null($quote)) {
-            throw QuoteNotFoundException::storeNotFoundException($id);
+        if (empty($quote)) {
+            throw QuoteNotFoundException::quoteNotFoundException($street, $postalCode, $city);
         }
 
-        return $this->quoteRepository->findById($id);
+        return $quote;
     }
 }

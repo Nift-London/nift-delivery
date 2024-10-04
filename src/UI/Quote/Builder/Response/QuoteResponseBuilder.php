@@ -21,8 +21,8 @@ final class QuoteResponseBuilder
         if (!is_null($proposalQuotesDTO->getEveningToday())) {
             $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Tonight',
-                'tonight#' . $proposalQuotesDTO->getEveningToday()->getId(),
-                1499,
+                $proposalQuotesDTO->getEveningToday()->getType()->value,
+                $proposalQuotesDTO->getEveningToday()->getCustomerPrice(),
                 'Evening delivery option. Estimated today delivery time: ' . $proposalQuotesDTO->getEveningToday()->getDeliveryDateTo()->format('H:i'),
                 $proposalQuotesDTO->getEveningToday()->getCurrency()
             );
@@ -31,9 +31,9 @@ final class QuoteResponseBuilder
         if (!is_null($proposalQuotesDTO->getFastestToday())) {
             $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Today',
-                'today#' . $proposalQuotesDTO->getFastestToday()->getId(),
-                999,
-                'Fastest delivery option. Estimated today delivery time: ' . $proposalQuotesDTO->getFastestToday()->getDeliveryDateTo()->format('H:i'),
+                $proposalQuotesDTO->getFastestToday()->getType()->value,
+                $proposalQuotesDTO->getFastestToday()->getCustomerPrice(),
+                'Today delivery option. Estimated today delivery time: ' . $proposalQuotesDTO->getFastestToday()->getDeliveryDateTo()->format('H:i'),
                 $proposalQuotesDTO->getFastestToday()->getCurrency()
             );
         }
@@ -41,8 +41,8 @@ final class QuoteResponseBuilder
         if (!is_null($proposalQuotesDTO->getLatest())) {
             $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Tomorrow',
-                'tomorrow#' . $proposalQuotesDTO->getLatest()->getId(),
-                599,
+                $proposalQuotesDTO->getLatest()->getType()->value,
+                $proposalQuotesDTO->getLatest()->getCustomerPrice(),
                 'Normal delivery option. Estimated delivery time: ' . $proposalQuotesDTO->getLatest()->getDeliveryDateTo()->format('Y/m/d H:i'),
                 $proposalQuotesDTO->getLatest()->getCurrency()
             );

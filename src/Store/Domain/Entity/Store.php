@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Store\Domain\Entity;
 
-use App\Quote\Domain\Entity\Quote;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,12 +11,10 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
-class Store
+class Store implements \Stringable
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private Uuid $id;
 
     #[ORM\Column(type: 'datetimetz_immutable', nullable: false)]
@@ -26,37 +23,42 @@ class Store
     #[ORM\Column(type: 'text', nullable: false)]
     private string $name;
 
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $street;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shopifyClientId;
 
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $postalCode;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shopifyClientSecret;
 
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $city;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shopifyAuthCode;
 
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $evermileLocationId;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shopifyToken;
 
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $shopifyToken;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shopifyName;
 
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $shopifyName;
-
-    #[ORM\Column(type: 'text', nullable: false)]
-    private string $shopifyDomain;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $shopifyDomain;
 
     #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
     private bool $enabled = false;
 
-    #[ORM\OneToMany(targetEntity: Quote::class, mappedBy: 'store')]
-    private Collection $quotes;
+    #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
+    private bool $shopifyWebhooksConfigured = false;
+
+    #[ORM\Column(type: 'boolean', nullable: false, columnDefinition: 'BOOLEAN DEFAULT false')]
+    private bool $shopifyCarrierServiceConfigured = false;
+
+    #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'store')]
+    /** @var Location[]|Collection */
+    private Collection $locations;
 
     public function __construct()
     {
+        $this->id = Uuid::v6();
         $this->createdAt = new \DateTimeImmutable();
-        $this->quotes = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public function getId(): Uuid
@@ -74,84 +76,73 @@ class Store
         return $this->name;
     }
 
-    public function getStreet(): string
-    {
-        return $this->street;
-    }
-
-    public function getPostalCode(): string
-    {
-        return $this->postalCode;
-    }
-
-    public function getCity(): string
-    {
-        return $this->city;
-    }
-
     public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
     }
 
-    public function setStreet(string $street): self
+    public function getShopifyClientId(): ?string
     {
-        $this->street = $street;
+        return $this->shopifyClientId;
+    }
+
+    public function setShopifyClientId(?string $shopifyClientId): self
+    {
+        $this->shopifyClientId = $shopifyClientId;
         return $this;
     }
 
-    public function setPostalCode(string $postalCode): self
+    public function getShopifyClientSecret(): ?string
     {
-        $this->postalCode = $postalCode;
+        return $this->shopifyClientSecret;
+    }
+
+    public function setShopifyClientSecret(?string $shopifyClientSecret): self
+    {
+        $this->shopifyClientSecret = $shopifyClientSecret;
         return $this;
     }
 
-    public function setCity(string $city): self
+    public function getShopifyAuthCode(): ?string
     {
-        $this->city = $city;
+        return $this->shopifyAuthCode;
+    }
+
+    public function setShopifyAuthCode(?string $shopifyAuthCode): self
+    {
+        $this->shopifyAuthCode = $shopifyAuthCode;
         return $this;
     }
 
-    public function getEvermileLocationId(): string
-    {
-        return $this->evermileLocationId;
-    }
-
-    public function setEvermileLocationId(string $evermileLocationId): self
-    {
-        $this->evermileLocationId = $evermileLocationId;
-        return $this;
-    }
-
-    public function getShopifyToken(): string
+    public function getShopifyToken(): ?string
     {
         return $this->shopifyToken;
     }
 
-    public function setShopifyToken(string $shopifyToken): self
+    public function setShopifyToken(?string $shopifyToken): self
     {
         $this->shopifyToken = $shopifyToken;
         return $this;
     }
 
-    public function getShopifyName(): string
+    public function getShopifyName(): ?string
     {
         return $this->shopifyName;
     }
 
-    public function setShopifyName(string $shopifyName): self
+    public function setShopifyName(?string $shopifyName): self
     {
         $this->shopifyName = $shopifyName;
         return $this;
     }
 
-    public function getShopifyDomain(): string
+    public function getShopifyDomain(): ?string
     {
         return $this->shopifyDomain;
     }
 
-    public function setShopifyDomain(string $shopifyDomain): self
+    public function setShopifyDomain(?string $shopifyDomain): self
     {
         $this->shopifyDomain = $shopifyDomain;
         return $this;
@@ -168,9 +159,35 @@ class Store
         return $this;
     }
 
-    /** @return Quote[]|Collection */
-    public function getQuotes(): Collection
+    public function getLocations(): Collection
     {
-        return $this->quotes;
+        return $this->locations;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
+    public function isShopifyWebhooksConfigured(): bool
+    {
+        return $this->shopifyWebhooksConfigured;
+    }
+
+    public function setShopifyWebhooksConfigured(bool $shopifyWebhooksConfigured): self
+    {
+        $this->shopifyWebhooksConfigured = $shopifyWebhooksConfigured;
+        return $this;
+    }
+
+    public function isShopifyCarrierServiceConfigured(): bool
+    {
+        return $this->shopifyCarrierServiceConfigured;
+    }
+
+    public function setShopifyCarrierServiceConfigured(bool $shopifyCarrierServiceConfigured): self
+    {
+        $this->shopifyCarrierServiceConfigured = $shopifyCarrierServiceConfigured;
+        return $this;
     }
 }

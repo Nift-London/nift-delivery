@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Quote\Domain\Enum;
 
+// todo move to common
 enum QuoteTypeEnum: string
 {
-    case EVERMILE = 'EVERMILE';
+    case EVERMILE_TONIGHT = 'EVERMILE_TONIGHT';
+    case EVERMILE_TODAY = 'EVERMILE_TODAY';
+    case EVERMILE_TOMORROW = 'EVERMILE_TOMORROW';
 }

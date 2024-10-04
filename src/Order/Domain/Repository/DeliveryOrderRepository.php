@@ -9,4 +9,6 @@ use App\Order\Domain\Entity\DeliveryOrder;
 interface DeliveryOrderRepository
 {
     public function save(DeliveryOrder $order): void;
+
+    public function findByExternalPurchaseId(string $externalPurchaseId): ?DeliveryOrder;
 }

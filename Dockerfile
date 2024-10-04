@@ -49,9 +49,9 @@ RUN echo 'memory_limit = 3048M' >> /usr/local/etc/php/conf.d/docker-php-memlimit
 RUN curl -LO https://github.com/DataDog/dd-trace-php/releases/latest/download/datadog-setup.php
 RUN php datadog-setup.php --php-bin=all
 
-COPY --chown=www-data:www-data . /var/www/html
+COPY --chown=www-data:www-data .. /var/www/html
 COPY --chown=www-data:www-data --from=vendor /app/vendor/ /var/www/html/vendor/
-COPY --chown=www-data:www-data  public/ /var/www/html/
+COPY --chown=www-data:www-data  public /var/www/html/
 
 COPY .infrastructure/configurations/php/entrypoint.sh entrypoint.sh
 
@@ -63,7 +63,7 @@ FROM nginx:latest AS nginx
 COPY .infrastructure/configurations/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY .infrastructure/configurations/nginx/production.conf /etc/nginx/conf.d/production.conf
 
-COPY --chown=nginx:nginx public/ /var/www/html/
+COPY --chown=nginx:nginx public /var/www/html/
 
 WORKDIR /var/www/html/
 

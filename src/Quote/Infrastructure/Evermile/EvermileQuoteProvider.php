@@ -6,32 +6,41 @@ namespace App\Quote\Infrastructure\Evermile;
 
 use App\Common\Evermile\Client\EvermileClient;
 use App\Quote\Application\DTO\AddressDTO;
+use App\Quote\Application\DTO\ItemDTO;
 use App\Quote\Application\DTO\QuoteDTO;
-use App\Quote\Application\DTO\StoreDTO;
+use App\Quote\Application\DTO\LocationDTO;
 use App\Quote\Domain\Enum\QuoteTypeEnum;
 use App\Quote\Infrastructure\Evermile\Builder\EvermileQuoteRequestBuilder;
+use Psr\Log\LoggerInterface;
 
 final class EvermileQuoteProvider
 {
     private EvermileClient $evermileClient;
     private EvermileQuoteRequestBuilder $evermileQuoteRequestBuilder;
+    private LoggerInterface $logger;
 
-    public function __construct(EvermileClient $evermileClient, EvermileQuoteRequestBuilder $evermileQuoteRequestBuilder)
-    {
+    public function __construct(
+        EvermileClient $evermileClient,
+        EvermileQuoteRequestBuilder $evermileQuoteRequestBuilder,
+        LoggerInterface $logger
+    ) {
         $this->evermileClient = $evermileClient;
         $this->evermileQuoteRequestBuilder = $evermileQuoteRequestBuilder;
+        $this->logger = $logger;
     }
 
-    // todo in future handle $addressFrom as priority, for now $store->evermileLocationId is enough
-    /** @return QuoteDTO[] */
-    public function provide(?AddressDTO $addressFrom, AddressDTO $addressTo, StoreDTO $store): array
+    /**
+     * @param ItemDTO[] $items
+     * @return QuoteDTO[]
+     */
+    public function provide(AddressDTO $addressTo, LocationDTO $store, array $items): array
     {
         $quotes = [];
 
         try {
-            $response = $this->evermileClient->getQuote($this->evermileQuoteRequestBuilder->build($addressTo, $store));
+            $response = $this->evermileClient->getQuote($this->evermileQuoteRequestBuilder->build($addressTo, $store, $items));
         } catch (\Exception $e) {
-            // todo log exception
+            $this->logger->error('Error while getting quotes from Evermile', ['error' => $e->getMessage()]);
             return $quotes;
         }
 
@@ -52,8 +61,7 @@ final class EvermileQuoteProvider
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getStart()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getEnd()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getStart()),
-                    \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getEnd()),
-                    QuoteTypeEnum::EVERMILE
+                    \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getEnd())
                 );
             }
 

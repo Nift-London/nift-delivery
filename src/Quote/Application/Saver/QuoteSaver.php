@@ -9,33 +9,34 @@ use App\Quote\Application\DTO\ProposalQuotesDTO;
 use App\Quote\Application\DTO\QuoteDTO;
 use App\Quote\Domain\Entity\Quote;
 use App\Quote\Domain\Repository\QuoteRepository;
+use App\Store\Domain\Entity\Location;
 use App\Store\Domain\Entity\Store;
-use App\Store\Infrastructure\Query\StoreQuery;
+use App\Store\Infrastructure\Query\LocationQuery;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV6;
 
 final class QuoteSaver
 {
     private QuoteRepository $quoteRepository;
-    private StoreQuery $storeQuery;
+    private LocationQuery $locationQuery;
 
-    public function __construct(QuoteRepository $quoteRepository, StoreQuery $storeQuery)
+    public function __construct(QuoteRepository $quoteRepository, LocationQuery $locationQuery)
     {
         $this->quoteRepository = $quoteRepository;
-        $this->storeQuery = $storeQuery;
+        $this->locationQuery = $locationQuery;
     }
 
-    public function save(ProposalQuotesDTO $proposalQuotesDTO, Uuid $storeId, AddressDTO $addressTo): void
+    public function save(ProposalQuotesDTO $proposalQuotesDTO, Uuid $locationId, AddressDTO $addressTo): void
     {
-        $store = $this->storeQuery->queryEntityById($storeId);
+        $location = $this->locationQuery->queryEntityById($locationId);
         $groupId = Uuid::v6();
 
-        $this->saveQuote($proposalQuotesDTO->getFastestToday(), $store, $addressTo, $groupId);
-        $this->saveQuote($proposalQuotesDTO->getEveningToday(), $store, $addressTo, $groupId);
-        $this->saveQuote($proposalQuotesDTO->getLatest(), $store, $addressTo, $groupId);
+        $this->saveQuote($proposalQuotesDTO->getFastestToday(), $location, $addressTo, $groupId);
+        $this->saveQuote($proposalQuotesDTO->getEveningToday(), $location, $addressTo, $groupId);
+        $this->saveQuote($proposalQuotesDTO->getLatest(), $location, $addressTo, $groupId);
     }
 
-    private function saveQuote(?QuoteDTO $quoteDTO, Store $store, AddressDTO $addressTo, Uuid $groupId)
+    private function saveQuote(?QuoteDTO $quoteDTO, Location $location, AddressDTO $addressTo, Uuid $groupId)
     {
         if (!is_null($quoteDTO)) {
             $quote = new Quote();
@@ -51,7 +52,7 @@ final class QuoteSaver
             $quote->setDeliveryStreet($addressTo->getStreet());
             $quote->setDeliveryPostalCode($addressTo->getPostalCode());
             $quote->setDeliveryCity($addressTo->getCity());
-            $quote->setStore($store);
+            $quote->setLocation($location);
 
             $this->quoteRepository->save($quote);
             $quoteDTO->setId($quote->getId()->jsonSerialize());
