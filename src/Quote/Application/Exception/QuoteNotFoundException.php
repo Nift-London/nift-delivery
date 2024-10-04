@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Quote\Application\Exception;
 
-use Symfony\Component\Uid\Uuid;
-
 final class QuoteNotFoundException extends \Exception
 {
-    public static function storeNotFoundException(Uuid $id): self
+    public static function quoteNotFoundException(string $street, string $postalCode, string $city): self
     {
-        return new self('Quote not found: ' . $id->jsonSerialize());
+        return new self(sprintf('Quote not found for % % % ', $street, $postalCode, $city));
     }
 }

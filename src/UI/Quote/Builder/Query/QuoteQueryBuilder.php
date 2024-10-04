@@ -5,19 +5,26 @@ declare(strict_types=1);
 namespace App\UI\Quote\Builder\Query;
 
 use App\Quote\Application\DTO\AddressDTO;
-use App\Quote\Application\DTO\StoreDTO;
+use App\Quote\Application\DTO\ItemDTO;
+use App\Quote\Application\DTO\LocationDTO;
 use App\Quote\Infrastructure\Query\DTO\QuoteQueryDTO;
+use App\Store\Application\Exception\LocationNotFoundException;
 use App\Store\Application\Exception\StoreValidationException;
-use App\Store\Infrastructure\Query\StoreQuery;
+use App\Store\Domain\Entity\Location;
+use App\Store\Infrastructure\Command\LocationCommand;
+use App\Store\Infrastructure\Query\LocationQuery;
+use App\UI\Quote\DTO\Request\Partial\QuoteForShopifyAddress;
 use App\UI\Quote\DTO\Request\QuoteForShopifyRequest;
 
 final class QuoteQueryBuilder
 {
-    private StoreQuery $storeQuery;
+    private LocationQuery $storeQuery;
+    private LocationCommand $locationCommand;
 
-    public function __construct(StoreQuery $storeQuery)
+    public function __construct(LocationQuery $storeQuery, LocationCommand $locationCommand)
     {
         $this->storeQuery = $storeQuery;
+        $this->locationCommand = $locationCommand;
     }
 
     /**
@@ -27,24 +34,65 @@ final class QuoteQueryBuilder
     {
         $originAddress = $quoteForShopifyRequest->getOrigin();
         $destinationAddress = $quoteForShopifyRequest->getDestination();
-        $store = $this->storeQuery->queryByShopifyDomain($quoteForShopifyRequest->getShopifyDomain());
+        $location = $this->getLocation($quoteForShopifyRequest, $originAddress);
 
-        if ($originAddress->getAddress1() && $originAddress->getPostalCode() && $originAddress->getCity()) {
-            $addressFrom = new AddressDTO(
-                trim($originAddress->getAddress1() . ' ' . $originAddress->getAddress2() . ' ' . $originAddress->getAddress3()),
+        $addressTo = $this->getAddress($destinationAddress);
+        $locationDTO = new LocationDTO(
+            $location->getId(),
+            $location->getEvermileLocationId(),
+            $location->getEnabledTypesWithPrices()
+        );
+        $items = $this->getItems($quoteForShopifyRequest);
+
+        return new QuoteQueryDTO($addressTo, $locationDTO, $items);
+    }
+
+    private function getAddress(QuoteForShopifyAddress $destinationAddress): AddressDTO
+    {
+        return new AddressDTO(
+            $this->getTrimmedAddress($destinationAddress),
+            $destinationAddress->getPostalCode(),
+            $destinationAddress->getCity()
+        );
+    }
+
+    /** @return ItemDTO[] */
+    private function getItems(QuoteForShopifyRequest $quoteForShopifyRequest): array
+    {
+        $items = [];
+
+        foreach ($quoteForShopifyRequest->getItems() as $item) {
+            $items[] = new ItemDTO(
+                $item->getName(),
+                $item->getSku(),
+                $item->getQuantity(),
+                $item->getPrice(),
+                $item->getGrams());
+        }
+        return $items;
+    }
+
+    private function getLocation(QuoteForShopifyRequest $quoteForShopifyRequest, QuoteForShopifyAddress $originAddress): Location
+    {
+        try {
+            return $this->storeQuery->query(
+                $quoteForShopifyRequest->getShopifyDomain(),
+                $this->getTrimmedAddress($originAddress),
+                $originAddress->getPostalCode(),
+                $originAddress->getCity()
+            );
+        } catch (LocationNotFoundException $e) {
+            return $this->locationCommand->create(
+                $quoteForShopifyRequest->getShopifyDomain(),
+                $this->getTrimmedAddress($originAddress),
                 $originAddress->getPostalCode(),
                 $originAddress->getCity()
             );
         }
+    }
 
-        $addressTo = new AddressDTO(
-            trim($destinationAddress->getAddress1() . ' ' . $destinationAddress->getAddress2() . ' ' . $destinationAddress->getAddress3()),
-            $destinationAddress->getPostalCode(),
-            $destinationAddress->getCity()
-        );
-
-        $storeDTO = new StoreDTO($store->getId(), $store->getEvermileLocationId());
-
-        return new QuoteQueryDTO($addressFrom ?? null, $addressTo, $storeDTO, $store->getId());
+    private function getTrimmedAddress(QuoteForShopifyAddress $destinationAddress): string
+    {
+        return trim($destinationAddress->getAddress1() . ' ' . $destinationAddress->getAddress2() . ' ' . $destinationAddress->getAddress3());
     }
 }

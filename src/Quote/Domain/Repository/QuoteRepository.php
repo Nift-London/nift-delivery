@@ -9,6 +9,6 @@ use Symfony\Component\Uid\Uuid;
 
 interface QuoteRepository
 {
-    public function findById(Uuid $id): ?Quote;
+    public function findByStreetPostalCodeCity(string $street, string $postalCode, string $city): array;
     public function save(Quote $quote): void;
 }

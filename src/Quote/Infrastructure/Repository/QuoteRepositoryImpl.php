@@ -23,8 +23,17 @@ final class QuoteRepositoryImpl extends ServiceEntityRepository implements Quote
         $this->getEntityManager()->flush();
     }
 
-    public function findById(Uuid $id): ?Quote
+    public function findByStreetPostalCodeCity(string $street, string $postalCode, string $city): array
     {
-        return $this->findOneBy(['id' => $id]);
+        // todo set max to 10 mins
+
+        return $this->findBy([
+            'deliveryStreet' => $street,
+            'deliveryPostalCode' => $postalCode,
+            'deliveryCity' => $city,
+//            'createdAt' => 'NOW() - INTERVAL 10 MINUTE'
+        ], [
+            'createdAt' => 'DESC'
+        ]);
     }
 }

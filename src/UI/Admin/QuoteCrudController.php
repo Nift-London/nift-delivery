@@ -4,6 +4,8 @@ namespace App\UI\Admin;
 
 use App\Order\Domain\Entity\DeliveryOrder;
 use App\Quote\Domain\Entity\Quote;
+use App\Quote\Domain\Enum\QuoteTypeEnum;
+use App\Store\Domain\Entity\Location;
 use App\Store\Domain\Entity\Store;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -26,23 +28,23 @@ class QuoteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            AssociationField::new('store')
-                ->formatValue(function (?Store $val) {
-                    return $val->getName();
+            AssociationField::new('location')
+                ->formatValue(function (Location $val) {
+                    return $val->getStore()->getName() . ' - ' . $val->getName();
                 }),
-            IdField::new('externalId')->hideOnIndex(),
+            ChoiceField::new('type')->hideOnIndex(),
+            TextField::new('externalId')->hideOnIndex(),
             DateTimeField::new('createdAt'),
-            IdField::new('pickupStreet')->hideOnIndex(),
-            IdField::new('pickupPostalCode')->hideOnIndex(),
-            IdField::new('pickupCity')->hideOnIndex(),
-            IdField::new('deliveryStreet')->hideOnIndex(),
-            IdField::new('deliveryPostalCode')->hideOnIndex(),
-            IdField::new('deliveryCity')->hideOnIndex(),
+            ChoiceField::new('type')->formatValue(function (QuoteTypeEnum $val) {
+                return $val->value;
+            }),
+            TextField::new('deliveryStreet')->hideOnIndex(),
+            TextField::new('deliveryPostalCode')->hideOnIndex(),
+            TextField::new('deliveryCity')->hideOnIndex(),
             DateTimeField::new('pickupDateFrom')->hideOnIndex(),
             DateTimeField::new('pickupDateTo')->hideOnIndex(),
             DateTimeField::new('deliveryDateFrom')->hideOnIndex(),
             DateTimeField::new('deliveryDateTo'),
-            ChoiceField::new('type')->hideOnIndex(),
             MoneyField::new('price')->setCurrency('GBP'),
             AssociationField::new('deliveryOrder')
                 ->formatValue(function (?DeliveryOrder $val) {
@@ -60,5 +62,11 @@ class QuoteCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::EDIT)
             ->remove(Crud::PAGE_DETAIL, Action::DELETE)
             ->add(Crud::PAGE_INDEX, Action::DETAIL);
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setDefaultSort(['createdAt' => 'DESC']);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UI\Quote\Builder\Request;
 
 use App\UI\Quote\DTO\Request\Partial\QuoteForShopifyAddress;
+use App\UI\Quote\DTO\Request\Partial\QuoteForShopifyItem;
 use App\UI\Quote\DTO\Request\QuoteForShopifyRequest;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -36,9 +37,28 @@ final class QuoteForShopifyRequestBuilder
             ->setAddress3($parameters['rate']['destination']['address3'])
             ->setCompanyName($parameters['rate']['destination']['company_name']);
 
+        $items = [];
+
+        foreach ($parameters['rate']['items'] as $item) {
+            $items[] = (new QuoteForShopifyItem())
+                ->setName($item['name'])
+                ->setSku($item['sku'])
+                ->setQuantity($item['quantity'])
+                ->setGrams($item['grams'])
+                ->setPrice($item['price'])
+                ->setVendor($item['vendor'])
+                ->setRequiresShipping($item['requires_shipping'])
+                ->setTaxable($item['taxable'])
+                ->setFulfillmentService($item['fulfillment_service'])
+                ->setProperties($item['properties'])
+                ->setProductId($item['product_id'])
+                ->setVariantId($item['variant_id']);
+        }
+
         return (new QuoteForShopifyRequest())
             ->setShopifyDomain($request->headers->get('X-Shopify-Shop-Domain'))
             ->setOrigin($origin)
-            ->setDestination($destination);
+            ->setDestination($destination)
+            ->setItems($items);
     }
 }

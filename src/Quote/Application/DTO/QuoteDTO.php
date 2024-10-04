@@ -14,6 +14,7 @@ final class QuoteDTO
     private string $code;
     private string $description;
     private int $price;
+    private int $customerPrice;
     private string $currency;
     private \DateTimeImmutable $pickupDateFrom;
     private \DateTimeImmutable $pickupDateTo;
@@ -31,8 +32,7 @@ final class QuoteDTO
         \DateTimeImmutable $pickupDateFrom,
         \DateTimeImmutable $pickupDateTo,
         \DateTimeImmutable $deliveryDateFrom,
-        \DateTimeImmutable $deliveryDateTo,
-        QuoteTypeEnum $type
+        \DateTimeImmutable $deliveryDateTo
     ) {
         $this->externalId = $externalId;
         $this->name = $name;
@@ -44,7 +44,6 @@ final class QuoteDTO
         $this->pickupDateTo = $pickupDateTo;
         $this->deliveryDateFrom = $deliveryDateFrom;
         $this->deliveryDateTo = $deliveryDateTo;
-        $this->type = $type;
     }
 
     public function setId(string $id): self
@@ -111,5 +110,22 @@ final class QuoteDTO
     public function getId(): ?string
     {
         return $this->id;
+    }
+
+    public function setType(QuoteTypeEnum $type): self
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function setCustomerPrice(int $customerPrice): QuoteDTO
+    {
+        $this->customerPrice = $customerPrice;
+        return $this;
+    }
+
+    public function getCustomerPrice(): int
+    {
+        return $this->customerPrice;
     }
 }
