@@ -40,7 +40,8 @@ RUN docker-php-ext-install  gd            \
                             bcmath        \
                             mysqli        \
                             pdo_mysql     \
-                            exif
+                            exif          \
+                            intl
 
 RUN pecl install redis && docker-php-ext-enable redis
 RUN echo 'memory_limit = 3048M' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini;
