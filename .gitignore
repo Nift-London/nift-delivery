@@ -50,9 +50,8 @@
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
+#/public/bundles/ #odkomentowac jak znajdziemy przyczyne
 /var/
-/vendor/
 ###< symfony/framework-bundle ###
 
 .idea/*

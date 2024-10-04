@@ -11,7 +11,7 @@ case ${ENTRY_POINT} in
 php_fpm)
     php-fpm
     ;;
-
+#http://localhost:8020/bundles/easyadmin/field-boolean.38cf4737.js
 #worker)
 #    printenv > /etc/environment
 #    CURRENT_PATH=$(pwd)
