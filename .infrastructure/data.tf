@@ -33,18 +33,6 @@ locals {
     APP_URL="https://delivery.staging.nift.london"
 
     DATABASE_URL="mysql://admin:${local.rds.password}@mysql.${var.environment}.local:3306/delivery?charset=utf8mb4"
-
-    EVERMILE_HOST="https://api.sandbox.evermile.io/v1/commercial"
-    EVERMILE_AUTH_HOST="https://auth.sandbox.evermile.io/oauth2/token"
-    EVERMILE_CLIENT_ID="7jus6glcrjfcu6c4epuhfgh9mg"
-    EVERMILE_CLIENT_SECRET="g3f4b7172nf17cgjn0rq9t0nbbt5t7u4im69g8nebh76ks0totp"
-    EVERMILE_MERCHANT_ID="6a2c90e0-d2df-4dd1-acc4-2822e994fc17"
-    #
-    #EVERMILE_HOST=https://api.prod.evermile.io/v1/commercial
-    #EVERMILE_AUTH_HOST=https://auth.prod.evermile.io/oauth2/token
-    #EVERMILE_CLIENT_ID=5nrbrrt3g470iuard53hfcmife
-    #EVERMILE_CLIENT_SECRET=1232qi64udaktv3nluhv7u2q28fs2cb04pgp4ndfciagjmcotgq6
-    #EVERMILE_MERCHANT_ID=7d76efda-6dc5-40de-a23b-bec02c8e35a4
   }
 
   full_app_envs = merge(
