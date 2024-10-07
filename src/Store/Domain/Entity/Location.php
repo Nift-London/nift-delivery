@@ -80,10 +80,10 @@ class Location implements \Stringable
     private bool $tonightFirstDistanceEnabled = false;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $todayFirstDistancePrice;
+    private int $todayFirstDistancePrice = 0;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $tonightFirstDistancePrice;
+    private int $tonightFirstDistancePrice = 0;
 
     /** Second Distance */
 
@@ -106,10 +106,10 @@ class Location implements \Stringable
     private bool $tonightSecondDistanceEnabled = false;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $todaySecondDistancePrice;
+    private int $todaySecondDistancePrice = 0;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $tonightSecondDistancePrice;
+    private int $tonightSecondDistancePrice = 0;
 
     /** Third Distance */
 
@@ -132,10 +132,10 @@ class Location implements \Stringable
     private bool $tonightThirdDistanceEnabled = false;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $todayThirdDistancePrice;
+    private int $todayThirdDistancePrice = 0;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $tonightThirdDistancePrice;
+    private int $tonightThirdDistancePrice = 0;
 
     /** Fourth Distance */
 
@@ -158,10 +158,10 @@ class Location implements \Stringable
     private bool $tonightFourthDistanceEnabled = false;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $todayFourthDistancePrice;
+    private int $todayFourthDistancePrice = 0;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $tonightFourthDistancePrice;
+    private int $tonightFourthDistancePrice = 0;
 
     /** Fifth Distance */
 
@@ -184,10 +184,10 @@ class Location implements \Stringable
     private bool $tonightFifthDistanceEnabled = false;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $todayFifthDistancePrice;
+    private int $todayFifthDistancePrice = 0;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private int $tonightFifthDistancePrice;
+    private int $tonightFifthDistancePrice = 0;
 
     #[ORM\ManyToOne(targetEntity: Store::class, inversedBy: 'locations')]
     #[ORM\JoinColumn(nullable: false)]
