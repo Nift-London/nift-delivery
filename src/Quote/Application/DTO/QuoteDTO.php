@@ -16,6 +16,7 @@ final class QuoteDTO
     private int $price;
     private int $customerPrice;
     private string $currency;
+    private ?int $originDestinationDistanceMeters;
     private \DateTimeImmutable $pickupDateFrom;
     private \DateTimeImmutable $pickupDateTo;
     private \DateTimeImmutable $deliveryDateFrom;
@@ -29,6 +30,7 @@ final class QuoteDTO
         string $description,
         int $price,
         string $currency,
+        ?int $originDestinationDistanceMeters,
         \DateTimeImmutable $pickupDateFrom,
         \DateTimeImmutable $pickupDateTo,
         \DateTimeImmutable $deliveryDateFrom,
@@ -40,6 +42,7 @@ final class QuoteDTO
         $this->description = $description;
         $this->price = $price;
         $this->currency = $currency;
+        $this->originDestinationDistanceMeters = $originDestinationDistanceMeters;
         $this->pickupDateFrom = $pickupDateFrom;
         $this->pickupDateTo = $pickupDateTo;
         $this->deliveryDateFrom = $deliveryDateFrom;
@@ -80,6 +83,11 @@ final class QuoteDTO
     public function getCurrency(): string
     {
         return $this->currency;
+    }
+
+    public function getOriginDestinationDistanceMeters(): ?int
+    {
+        return $this->originDestinationDistanceMeters;
     }
 
     public function getPickupDateFrom(): \DateTimeImmutable

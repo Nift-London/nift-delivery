@@ -31,6 +31,9 @@ class Quote
     #[ORM\Column(type: 'integer')]
     private int $price;
 
+    #[ORM\Column(type: 'integer')]
+    private int $customerPrice;
+
     #[ORM\Column(type: 'text')]
     private string $currency;
 
@@ -100,6 +103,17 @@ class Quote
     public function setPrice(int $price): self
     {
         $this->price = $price;
+        return $this;
+    }
+
+    public function getCustomerPrice(): int
+    {
+        return $this->customerPrice;
+    }
+
+    public function setCustomerPrice(int $customerPrice): self
+    {
+        $this->customerPrice = $customerPrice;
         return $this;
     }
 

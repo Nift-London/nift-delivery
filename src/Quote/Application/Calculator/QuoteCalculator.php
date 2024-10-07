@@ -9,6 +9,7 @@ use App\Quote\Application\DTO\QuoteDTO;
 use App\Quote\Domain\Enum\QuoteTypeEnum;
 
 // This will be strategy in future to calculate cheapest/fastest quotes
+// todo strategy pattern
 final class QuoteCalculator
 {
     public function calculate(array $quotes, array $typePriceTable): ProposalQuotesDTO
@@ -52,8 +53,14 @@ final class QuoteCalculator
         }
 
         if (!is_null($cheapestQuote)) {
+            $priceTable = $this->getPriceTable($typePriceTable[QuoteTypeEnum::EVERMILE_TODAY->value], $cheapestQuote);
+
+            if (is_null($priceTable)) {
+                return null;
+            }
+
             $cheapestQuote->setType(QuoteTypeEnum::EVERMILE_TODAY);
-            $cheapestQuote->setCustomerPrice($typePriceTable[QuoteTypeEnum::EVERMILE_TODAY->value]);
+            $cheapestQuote->setCustomerPrice($priceTable['price']);
         }
 
         return $cheapestQuote;
@@ -68,8 +75,14 @@ final class QuoteCalculator
 
         foreach ($quotes as $quote) {
             if ($quote->getName() === 'evening') {
+                $priceTable = $this->getPriceTable($typePriceTable[QuoteTypeEnum::EVERMILE_TONIGHT->value], $quote);
+
+                if (is_null($priceTable)) {
+                    return null;
+                }
+
                 $quote->setType(QuoteTypeEnum::EVERMILE_TONIGHT);
-                $quote->setCustomerPrice($typePriceTable[QuoteTypeEnum::EVERMILE_TONIGHT->value]);
+                $quote->setCustomerPrice($priceTable['price']);
                 return $quote;
             }
         }
@@ -106,5 +119,25 @@ final class QuoteCalculator
         }
 
         return $cheapestQuote;
+    }
+
+    public function getPriceTable($typePriceTable, QuoteDTO $quote): mixed
+    {
+        $priceTable = null;
+
+        foreach ($typePriceTable as $table) {
+            if (is_null($table['distanceFrom']) || is_null($table['distanceTo'])) {
+                continue;
+            }
+
+            if ($table['distanceFrom'] <= $quote->getOriginDestinationDistanceMeters() && $table['distanceTo'] >= $quote->getOriginDestinationDistanceMeters()) {
+                $priceTable = $table;
+                break;
+            }
+        }
+
+        if (is_null($priceTable) || $quote->getPrice() > $priceTable['maxPrice']) {
+            return null;
+        }
     }
 }

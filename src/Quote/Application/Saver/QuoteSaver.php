@@ -43,6 +43,7 @@ final class QuoteSaver
             $quote->setGroupId($groupId);
             $quote->setExternalId($quoteDTO->getExternalId());
             $quote->setPrice($quoteDTO->getPrice());
+            $quote->setCustomerPrice($quoteDTO->getCustomerPrice());
             $quote->setCurrency($quoteDTO->getCurrency());
             $quote->setPickupDateFrom($quoteDTO->getPickupDateFrom());
             $quote->setPickupDateTo($quoteDTO->getPickupDateTo());

@@ -58,6 +58,7 @@ final class EvermileQuoteProvider
                     $proposal->getModelName(),
                     $proposal->getPriceVat()->getValue(),
                     $proposal->getPriceVat()->getCurrency(),
+                    $proposal->getOriginDestinationDistanceMeters(),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getStart()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedPickup()->getEnd()),
                     \DateTimeImmutable::createFromMutable($proposal->getEstimatedDropoff()->getStart()),
