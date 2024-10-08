@@ -97,6 +97,7 @@ final class QuoteCalculator
             return null;
         }
 
+        $priceTable = $typePriceTable[QuoteTypeEnum::EVERMILE_TOMORROW->value];
         $today = new \DateTimeImmutable();
         $cheapestQuote = null;
         $chosenDate = null;
@@ -113,12 +114,13 @@ final class QuoteCalculator
             }
         }
 
-        if (!is_null($cheapestQuote)) {
+        if (!is_null($cheapestQuote) && $cheapestQuote->getPrice() <= $priceTable['maxPrice']) {
             $cheapestQuote->setType(QuoteTypeEnum::EVERMILE_TOMORROW);
-            $cheapestQuote->setCustomerPrice($typePriceTable[QuoteTypeEnum::EVERMILE_TOMORROW->value]);
+            $cheapestQuote->setCustomerPrice($priceTable['price']);
+            return $cheapestQuote;
         }
 
-        return $cheapestQuote;
+        return null;
     }
 
     public function getPriceTable($typePriceTable, QuoteDTO $quote): ?array

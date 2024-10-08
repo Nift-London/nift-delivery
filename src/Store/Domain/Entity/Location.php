@@ -432,7 +432,11 @@ class Location implements \Stringable
         }
 
         if ($this->isTomorrowEnabled()) {
-            $types[QuoteTypeEnum::EVERMILE_TOMORROW->value] = $this->getTomorrowPrice();
+            $types[QuoteTypeEnum::EVERMILE_TOMORROW->value] = [
+                'price' => $this->getTomorrowPrice(),
+                'maxPrice' => $this->getTomorrowMaxPrice(),
+            ];
+
         }
 
         return $types;

@@ -46,6 +46,7 @@ class QuoteCrudController extends AbstractCrudController
             DateTimeField::new('deliveryDateFrom')->hideOnIndex(),
             DateTimeField::new('deliveryDateTo'),
             MoneyField::new('price')->setCurrency('GBP'),
+            MoneyField::new('customerPrice')->setCurrency('GBP'),
             AssociationField::new('deliveryOrder')
                 ->formatValue(function (?DeliveryOrder $val) {
                     return is_null($val) ? '-' : '<i class="fa-solid fa-truck-fast"></i>';
