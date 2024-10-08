@@ -121,7 +121,7 @@ final class QuoteCalculator
         return $cheapestQuote;
     }
 
-    public function getPriceTable($typePriceTable, QuoteDTO $quote): mixed
+    public function getPriceTable($typePriceTable, QuoteDTO $quote): ?array
     {
         $priceTable = null;
 
@@ -139,5 +139,7 @@ final class QuoteCalculator
         if (is_null($priceTable) || $quote->getPrice() > $priceTable['maxPrice']) {
             return null;
         }
+
+        return $priceTable;
     }
 }
