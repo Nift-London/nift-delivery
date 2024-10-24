@@ -28,6 +28,11 @@ final class StoreRepositoryImpl extends ServiceEntityRepository implements Store
         return $this->findOneBy(['shopifyDomain' => $shopifyDomain]);
     }
 
+    public function findByName(string $name): ?Store
+    {
+        return $this->findOneBy(['name' => $name]);
+    }
+
     public function findById(Uuid $id): ?Store
     {
         return $this->findOneBy(['id' => $id]);

@@ -16,7 +16,7 @@ use App\Store\Infrastructure\Query\LocationQuery;
 use App\UI\Quote\DTO\Request\Partial\QuoteForShopifyAddress;
 use App\UI\Quote\DTO\Request\QuoteForShopifyRequest;
 
-final class QuoteQueryBuilder
+final class QuoteQueryByShopifyRequestBuilder
 {
     private LocationQuery $storeQuery;
     private LocationCommand $locationCommand;
@@ -75,14 +75,14 @@ final class QuoteQueryBuilder
     private function getLocation(QuoteForShopifyRequest $quoteForShopifyRequest, QuoteForShopifyAddress $originAddress): Location
     {
         try {
-            return $this->storeQuery->query(
+            return $this->storeQuery->queryByShopifyDomain(
                 $quoteForShopifyRequest->getShopifyDomain(),
                 $this->getTrimmedAddress($originAddress),
                 $originAddress->getPostalCode(),
                 $originAddress->getCity()
             );
         } catch (LocationNotFoundException $e) {
-            return $this->locationCommand->create(
+            return $this->locationCommand->createWithShopifyDomain(
                 $quoteForShopifyRequest->getShopifyDomain(),
                 $this->getTrimmedAddress($originAddress),
                 $originAddress->getPostalCode(),
