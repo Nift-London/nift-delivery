@@ -33,4 +33,18 @@ final class StoreProvider
 
         return $store;
     }
+
+    /**
+     * @throws StoreValidationException
+     */
+    public function provideStoreByName(string $name): Store
+    {
+        $store = $this->storeRepository->findByName($name);
+
+        if (is_null($store) || !$store->isEnabled()) {
+            throw StoreValidationException::storeNotFoundException();
+        }
+
+        return $store;
+    }
 }

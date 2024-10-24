@@ -27,6 +27,7 @@
         "symfony/monolog-bundle": "^3.10",
         "symfony/property-access": "6.4.*",
         "symfony/runtime": "6.4.*",
+        "symfony/security-bundle": "6.4.*",
         "symfony/serializer": "6.4.*",
         "symfony/uid": "6.4.*",
         "symfony/yaml": "6.4.*"
@@ -84,5 +85,10 @@
             "type": "vcs",
             "url":  "git@github.com:Nift-London/evermile-sdk.git"
         }
-    ]
+    ],
+    "require-dev": {
+        "symfony/maker-bundle": "^1.61",
+        "symfony/stopwatch": "6.4.*",
+        "symfony/web-profiler-bundle": "6.4.*"
+    }
 }

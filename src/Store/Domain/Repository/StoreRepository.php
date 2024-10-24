@@ -11,5 +11,6 @@ interface StoreRepository
 {
     public function save(Store $store): void;
     public function findByShopifyDomain(string $shopifyDomain): ?Store;
+    public function findByName(string $name): ?Store;
     public function findById(Uuid $id);
 }

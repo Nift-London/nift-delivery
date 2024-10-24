@@ -34,6 +34,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Order/Domain/Entity'
                 prefix: 'App\Order\Domain\Entity'
                 alias: App\Order
+            App\Security:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Security/Entity'
+                prefix: 'App\Security\Entity'
+                alias: App\Security
 
 when@test:
     doctrine:

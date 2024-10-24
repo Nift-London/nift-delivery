@@ -6,21 +6,20 @@ namespace App\UI\Quote\Builder\Response;
 
 use App\Quote\Application\DTO\ProposalQuotesDTO;
 use App\Quote\Application\DTO\QuoteDTO;
-use App\UI\Quote\DTO\Response\QuoteResponse;
+use App\UI\Quote\DTO\Response\ShopifyQuoteResponse;
 
-final class QuoteResponseBuilder
+final class ShopifyQuoteResponseBuilder
 {
     /**
      * @param QuoteDTO[] $quoteDTOs
-     * @return QuoteResponse[]
+     * @return ShopifyQuoteResponse[]
      */
     public function build(ProposalQuotesDTO $proposalQuotesDTO): array
     {
         $proposals = [];
 
         if (!is_null($proposalQuotesDTO->getEveningToday())) {
-            $proposals[] = new QuoteResponse(
-                $proposalQuotesDTO->getEveningToday()->getId(),
+            $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Tonight',
                 $proposalQuotesDTO->getEveningToday()->getType()->value,
                 $proposalQuotesDTO->getEveningToday()->getCustomerPrice(),
@@ -30,8 +29,7 @@ final class QuoteResponseBuilder
         }
 
         if (!is_null($proposalQuotesDTO->getFastestToday())) {
-            $proposals[] = new QuoteResponse(
-                $proposalQuotesDTO->getFastestToday()->getId(),
+            $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Today',
                 $proposalQuotesDTO->getFastestToday()->getType()->value,
                 $proposalQuotesDTO->getFastestToday()->getCustomerPrice(),
@@ -41,8 +39,7 @@ final class QuoteResponseBuilder
         }
 
         if (!is_null($proposalQuotesDTO->getLatest())) {
-            $proposals[] = new QuoteResponse(
-                $proposalQuotesDTO->getLatest()->getId(),
+            $proposals[] = new ShopifyQuoteResponse(
                 'Need it for Tomorrow',
                 $proposalQuotesDTO->getLatest()->getType()->value,
                 $proposalQuotesDTO->getLatest()->getCustomerPrice(),

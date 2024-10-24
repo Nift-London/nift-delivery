@@ -35,7 +35,36 @@ final class LocationCommand
         $this->logger = $logger;
     }
 
-    public function create(
+    public function createWithStoreName(
+        string $storeName,
+        string $street,
+        string $postalCode,
+        string $city,
+    ): Location {
+        $store = $this->storeProvider->provideStoreByName($storeName);
+
+        $response = $this->evermileClient->createLocation(
+            $store->getName() . ' - ' . $street,
+            $street,
+            $postalCode,
+            $city
+        );
+
+        $location = (new Location())
+            ->setName($street)
+            ->setStreet($street)
+            ->setPostalCode($postalCode)
+            ->setCity($city)
+            ->setEvermileLocationId($response->getId())
+            ->setStore($store)
+            ->setEnabled(true);
+
+        $this->locationRepository->save($location);
+
+        return $location;
+    }
+
+    public function createWithShopifyDomain(
         string $shopifyDomain,
         string $street,
         string $postalCode,
